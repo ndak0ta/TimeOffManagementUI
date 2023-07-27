@@ -7,13 +7,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { IAuthLogin, login } from "../services/Api";
+import { login } from "../utils/Api/AuthApi";
+import { IAuthLogin } from "../utils/Interfaces";
+import { useDispatch } from "react-redux";
+import { setToken } from "../redux/store";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -27,7 +30,7 @@ export default function LoginPage() {
     const token = await login(loginData);
 
     if (token) {
-      localStorage.setItem("token", token);
+      dispatch(setToken(token));
       navigate("/");
     }
   };

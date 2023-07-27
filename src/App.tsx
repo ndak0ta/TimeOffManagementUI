@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { useNavigate } from "react-router-dom";
+import { parseJwt, tokenClaimNames } from "./utils/Token";
+import Dashboard from "./components/dashboard/Dashboard";
 
-function App() {
+export default function App() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -14,9 +16,7 @@ function App() {
 
   return (
     <div className="App">
-      <p>{token}</p>
+      <Dashboard />
     </div>
   );
 }
-
-export default App;
