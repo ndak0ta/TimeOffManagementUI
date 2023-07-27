@@ -36,6 +36,18 @@ export interface IUser {
     remainingAnnualTimeOffs: number;
 }
 
+export interface IUserInfo {
+    firstName: string;
+    lastName: string;
+    dateOfBirth: Date;
+    hireDate: Date;
+    address: string;
+    annualTimeOffs: number;
+    remainingAnnualTimeOffs: number;
+    email: string;
+    phoneNumber: string;
+}
+
 export interface IUserCreate {
     username: string;
     password: string;

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { useNavigate } from "react-router-dom";
-import { parseJwt, tokenClaimNames } from "./utils/Token";
 import Dashboard from "./components/dashboard/Dashboard";
 
 export default function App() {
