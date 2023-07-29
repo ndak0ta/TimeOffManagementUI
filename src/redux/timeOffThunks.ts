@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createTimeOff, getTimeOff } from "../utils/Api/TimeOffApi";
+import { createTimeOff, deleteTimeOff, getTimeOff } from "../utils/Api/TimeOffApi";
 import { ITimeOffRequest } from "../utils/Interfaces";
-import { AppDispatch } from "./store";
 
 export const getTimeOffsAndSetTimeOffs = createAsyncThunk(
     "timeOff/getTimeOffs",
@@ -15,6 +14,15 @@ export const createTimeOffAndSetTimeOffs = createAsyncThunk(
     "timeOff/createTimeOff",
     async ({ token, timeOff }: { token: string, timeOff: ITimeOffRequest }) => {
         await createTimeOff(token, timeOff);
+        const timeOffs = await getTimeOff(token);
+        return timeOffs;
+    }
+);
+
+export const deleteTimeOffAndSetTimeOffs = createAsyncThunk(
+    "timeOff/deleteTimeOff",
+    async ({ token, timeOffId }: { token: string, timeOffId: number }) => {
+        await deleteTimeOff(token, timeOffId);
         const timeOffs = await getTimeOff(token);
         return timeOffs;
     }

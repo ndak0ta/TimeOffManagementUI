@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ITimeOff } from "../utils/Interfaces";
-import { createTimeOffAndSetTimeOffs, getTimeOffsAndSetTimeOffs } from "./timeOffThunks";
+import { createTimeOffAndSetTimeOffs, deleteTimeOffAndSetTimeOffs, getTimeOffsAndSetTimeOffs } from "./timeOffThunks";
 import { createTimeOff } from "../utils/Api/TimeOffApi";
 
 interface TimeOffState {
@@ -11,8 +11,23 @@ interface TimeOffState {
 
 const initialState: TimeOffState = {
     timeOff: null,
-    loading: false,
+    loading: true,
     error: null
+};
+
+const setLoadingAndClearError = (state: TimeOffState) => {
+    state.loading = true;
+    state.error = null;
+};
+  
+const setTimeOffAndClearLoading = (state: TimeOffState, action: any) => {
+    state.timeOff = action.payload;
+    state.loading = false;
+};
+  
+const setErrorAndClearLoading = (state: TimeOffState, action: any) => {
+    state.error = action.error.message;
+    state.loading = false;
 };
 
 const timeOffSlice = createSlice({
@@ -20,26 +35,20 @@ const timeOffSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(getTimeOffsAndSetTimeOffs.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        }).addCase(getTimeOffsAndSetTimeOffs.fulfilled, (state, action) => {
-            state.timeOff = action.payload;
-            state.loading = false;
-        }).addCase(getTimeOffsAndSetTimeOffs.rejected, (state, action) => {
-            state.error = action.error.message;
-            state.loading = false;
-        }).addCase(createTimeOffAndSetTimeOffs.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-        }).addCase(createTimeOffAndSetTimeOffs.fulfilled, (state, action) => {
-            state.timeOff = action.payload;
-            state.loading = false;
-        }).addCase(createTimeOffAndSetTimeOffs.rejected, (state, action) => {
-            state.error = action.error.message;
-            state.loading = false;
-        });
+        builder
+        .addCase(getTimeOffsAndSetTimeOffs.pending, setLoadingAndClearError)
+        .addCase(getTimeOffsAndSetTimeOffs.fulfilled, setTimeOffAndClearLoading)
+        .addCase(getTimeOffsAndSetTimeOffs.rejected, setErrorAndClearLoading)
+
+        .addCase(createTimeOffAndSetTimeOffs.pending, setLoadingAndClearError)
+        .addCase(createTimeOffAndSetTimeOffs.fulfilled, setTimeOffAndClearLoading)
+        .addCase(createTimeOffAndSetTimeOffs.rejected, setErrorAndClearLoading)
+
+        .addCase(deleteTimeOffAndSetTimeOffs.pending, setLoadingAndClearError)
+        .addCase(deleteTimeOffAndSetTimeOffs.fulfilled, setTimeOffAndClearLoading)
+        .addCase(deleteTimeOffAndSetTimeOffs.rejected, setErrorAndClearLoading);
     }
 });
 
 export default timeOffSlice.reducer;
+

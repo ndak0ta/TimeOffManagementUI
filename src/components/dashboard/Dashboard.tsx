@@ -18,8 +18,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
-import Deposits from "./Deposits";
-import Orders from "./Orders";
+import UserCard from "./UserCard";
+import TimeOffs from "./TimeOffs";
 
 function Copyright(props: any) {
   return (
@@ -181,7 +181,7 @@ export default function Dashboard() {
                     height: 240,
                   }}
                 >
-                  <Deposits />
+                  <UserCard />
                 </Paper>
               </Grid>
               {/* Chart */}
@@ -198,7 +198,7 @@ export default function Dashboard() {
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Orders />
+                  <TimeOffs />
                 </Paper>
               </Grid>
             </Grid>

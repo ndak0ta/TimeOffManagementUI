@@ -20,7 +20,7 @@ import { createTimeOffAndSetTimeOffs } from "../../redux/timeOffThunks";
 import { AppDispatch } from "../../redux/store";
 import { getUserInfoAndSetUserInfo } from "../../redux/userInfoThunks";
 
-export default function Deposits() {
+export default function UserCard() {
   // TODO daha sonra ismini değiştir
   const token = useSelector((state: any) => state.token.token);
   const user = useSelector((state: any) => state.userInfo);
@@ -54,7 +54,7 @@ export default function Deposits() {
     dispatch(getUserInfoAndSetUserInfo(token));
   }, [token, dispatch]);
 
-  if (user.loading || user.user === undefined || user.user === null) {
+  if (user.loading) {
     return <div>Loading...</div>;
   }
 
@@ -68,7 +68,7 @@ export default function Deposits() {
         Yıllık izin bakiyesi: {user.user.remainingAnnualTimeOffs} /{" "}
         {user.user.annualTimeOffs}
       </Typography>
-      <Typography component="p">Ünvan: {user.user.role}</Typography>
+      <Typography component="p">Ünvan: {user.user.roles}</Typography>
       <div>
         <Link color="primary" href="#" onClick={handleClickOpen}>
           İzin talebi oluştur

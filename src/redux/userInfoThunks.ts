@@ -6,7 +6,6 @@ export const getUserInfoAndSetUserInfo = createAsyncThunk(
     "userInfo/getUserInfo",
     async (token: string) => {
         const user = await getUser(token);
-        user.role = await getUserRole(token);
         return user;
     }
 );

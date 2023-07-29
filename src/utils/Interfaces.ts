@@ -56,7 +56,7 @@ export interface IUserInfo {
     remainingAnnualTimeOffs: number;
     email: string;
     phoneNumber: string;
-    role?: string;
+    roles?: string[];
 }
 
 export interface IUserCreate {
