@@ -1,4 +1,4 @@
-import React, { Fragment, MouseEvent, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
@@ -8,39 +8,27 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Title from "./Title";
-import { IUser } from "../../utils/Interfaces";
-import { getUser, getUserRole } from "../../utils/Api/UserApi";
+import { ITimeOffRequest } from "../../utils/Interfaces";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { createTimeOff } from "../../utils/Api/TimeOffApi";
+import { useDispatch, useSelector } from "react-redux";
+import dayjs from "dayjs";
+import "dayjs/locale/tr";
+import { createTimeOffAndSetTimeOffs } from "../../redux/timeOffThunks";
+import { AppDispatch } from "../../redux/store";
+import { getUserInfoAndSetUserInfo } from "../../redux/userInfoThunks";
 
 export default function Deposits() {
-  const [user, setUser] = useState<IUser>({
-    id: 0,
-    username: "",
-    email: "",
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    hireDate: new Date(),
-    phoneNumber: "",
-    address: "",
-    annualTimeOffs: 0,
-    remainingAnnualTimeOffs: 0,
-  });
-  const [role, setRole] = useState<string>("");
+  // TODO daha sonra ismini değiştir
+  const token = useSelector((state: any) => state.token.token);
+  const user = useSelector((state: any) => state.userInfo);
   const [openTimeOffDialog, setOpenTimeOffDialog] = useState(false);
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-
-  const handleUser = async () => {
-    const userInfo = await getUser();
-
-    setUser(userInfo);
-    setRole(await getUserRole());
-  };
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleClickOpen = () => {
     setOpenTimeOffDialog(true);
@@ -50,29 +38,37 @@ export default function Deposits() {
     setOpenTimeOffDialog(false);
   };
 
-  const handleSendTimeOff = () => {
+  const handleSendTimeOff = async () => {
     setOpenTimeOffDialog(false);
 
-    console.log(description);
-    console.log(startDate);
-    console.log(endDate);
+    const timeOff: ITimeOffRequest = {
+      description: description,
+      startDate: startDate,
+      endDate: endDate,
+    };
+
+    await dispatch(createTimeOffAndSetTimeOffs({ token, timeOff }));
   };
 
   useEffect(() => {
-    handleUser();
-  }, []);
+    dispatch(getUserInfoAndSetUserInfo(token));
+  }, [token, dispatch]);
+
+  if (user.loading || user.user === undefined || user.user === null) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Fragment>
       <Title>
-        {user.firstName} {user.lastName}
+        {user.user.firstName} {user.user.lastName}
       </Title>
       <Typography color="text.secondary" sx={{ flex: 1 }}></Typography>
       <Typography component="p">
-        Yıllık izin bakiyesi: {user.remainingAnnualTimeOffs} /{" "}
-        {user.annualTimeOffs}
+        Yıllık izin bakiyesi: {user.user.remainingAnnualTimeOffs} /{" "}
+        {user.user.annualTimeOffs}
       </Typography>
-      <Typography component="p">Ünvan: {role}</Typography>
+      <Typography component="p">Ünvan: {user.user.role}</Typography>
       <div>
         <Link color="primary" href="#" onClick={handleClickOpen}>
           İzin talebi oluştur
@@ -94,28 +90,33 @@ export default function Deposits() {
               variant="standard"
               onChange={(e) => setDescription(e.target.value)}
             />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">
               <DatePicker
-                label="Gün Ay Yıl Seçiniz"
+                label="Başlangıç tarihi"
                 onChange={(date: Date | null) =>
                   date ? setStartDate(date) : null
                 }
                 format="DD/MM/YYYY"
+                // @ts-ignore
+                defaultValue={dayjs(new Date())}
+                sx={{ marginBottom: "8px", width: "100%" }}
+              />
+              <DatePicker
+                label="Bitiş tarihi"
+                onChange={(date: Date | null) =>
+                  date ? setEndDate(date) : null
+                }
+                format="DD/MM/YYYY"
+                // @ts-ignore
+                defaultValue={dayjs(
+                  new Date().setDate(new Date().getDate() + 1)
+                )}
+                sx={{ width: "100%" }}
               />
             </LocalizationProvider>
-            <TextField
-              margin="dense"
-              id="endDate"
-              label="Bitiş Tarihi"
-              type="date"
-              fullWidth
-              variant="standard"
-              InputLabelProps={{ shrink: true }}
-              onChange={(e) => setEndDate(new Date(e.target.value))}
-            />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>iptal</Button>
+            <Button onClick={handleClose}>İptal</Button>
             <Button onClick={handleSendTimeOff}>Gönder</Button>
           </DialogActions>
         </Dialog>

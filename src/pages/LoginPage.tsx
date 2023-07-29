@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../utils/Api/AuthApi";
 import { IAuthLogin } from "../utils/Interfaces";
 import { useDispatch } from "react-redux";
-import { setToken } from "../redux/store";
+import { setToken } from "../redux/tokenReducer";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");

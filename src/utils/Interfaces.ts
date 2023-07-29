@@ -16,10 +16,20 @@ export interface IAuthRegister {
 }
 
 export interface ITimeOff {
+    id: number;
     description: string;
     startDate: Date;
     endDate: Date;
     totalDays: number;
+    isPending: boolean;
+    isApproved: boolean;
+    createdAt: Date;
+}
+
+export interface ITimeOffRequest {
+    description: string;
+    startDate: Date;
+    endDate: Date;
 }
 
 export interface IUser {
@@ -46,6 +56,7 @@ export interface IUserInfo {
     remainingAnnualTimeOffs: number;
     email: string;
     phoneNumber: string;
+    role?: string;
 }
 
 export interface IUserCreate {
