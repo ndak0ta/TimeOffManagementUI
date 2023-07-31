@@ -56,13 +56,13 @@ export interface IUser {
 export interface IUserInfo {
     firstName: string;
     lastName: string;
+    email: string;
     dateOfBirth: Date;
     hireDate: Date;
     address: string;
+    phoneNumber: string;
     annualTimeOffs: number;
     remainingAnnualTimeOffs: number;
-    email: string;
-    phoneNumber: string;
     roles?: string[];
 }
 

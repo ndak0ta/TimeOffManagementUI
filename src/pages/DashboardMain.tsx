@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../redux/store";
 import { Grid } from "@mui/material";
 
-export default function Dashboard() {
+export default function DashboardMain() {
   const token = useSelector((state: any) => state.token.token);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();

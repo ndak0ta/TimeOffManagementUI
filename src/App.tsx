@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
+import DashboardMain from "./pages/DashboardMain";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
 import ErrorPage from "./pages/ErrorPage";
-import Profile from "./components/dashboard/Profile";
+import DashboardProfile from "./pages/DashboardProfile";
 import LoginPage from "./pages/LoginPage";
 import { PersistGate } from "redux-persist/integration/react";
 
@@ -13,12 +13,12 @@ export default function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Dashboard />,
+      element: <DashboardMain />,
       errorElement: <ErrorPage />,
     },
     {
       path: "/profile",
-      element: <Profile />,
+      element: <DashboardProfile />,
     },
     {
       path: "/login",
