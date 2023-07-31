@@ -1,25 +1,36 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./App.css";
-import { useNavigate } from "react-router-dom";
-import Dashboard from "./components/dashboard/Dashboard";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "./redux/store";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import { Provider } from "react-redux";
+import { persistor, store } from "./redux/store";
+import ErrorPage from "./pages/ErrorPage";
+import Profile from "./components/dashboard/Profile";
+import LoginPage from "./pages/LoginPage";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function App() {
-  const token = useSelector((state: any) => state.token.token);
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (token === null) {
-      navigate("/login");
-    }
-
-  }, [token, navigate, dispatch]);
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Dashboard />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/profile",
+      element: <Profile />,
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
+    },
+  ]);
 
   return (
-    <div className="App">
-      <Dashboard />
-    </div>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
   );
 }

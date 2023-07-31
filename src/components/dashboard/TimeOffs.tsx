@@ -1,17 +1,16 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Title from "./Title";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
-import {
-  getTimeOffsAndSetTimeOffs,
-} from "../../redux/timeOffThunks";
-import "dayjs/locale/tr";
+import { getTimeOffsAndSetTimeOffs } from "../../redux/timeOffThunks";
 import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import TimeOffTable from "./TimeOffTable";
 import { ITimeOff } from "../../utils/Interfaces";
+import "dayjs/locale/tr";
 
 export default function TimeOffs() {
+  const [loading, setLoading] = useState(true);
   const token = useSelector((state: any) => state.token.token);
   const timeOff = useSelector((state: any) => state.timeOff);
   const dispatch = useDispatch<AppDispatch>();
@@ -23,10 +22,12 @@ export default function TimeOffs() {
   };
 
   useEffect(() => {
-    dispatch(getTimeOffsAndSetTimeOffs(token));
+    dispatch(getTimeOffsAndSetTimeOffs(token)).then(() => {
+      setLoading(false);
+    });
   }, []);
 
-  if (timeOff.loading) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 

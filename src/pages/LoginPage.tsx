@@ -8,15 +8,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { login } from "../utils/Api/AuthApi";
 import { IAuthLogin } from "../utils/Interfaces";
-import { useDispatch } from "react-redux";
-import { setToken } from "../redux/tokenReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { getTokenAndSetToken } from "../redux/tokenThunks";
+import { AppDispatch } from "../redux/store";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
+  const token = useSelector((state: any) => state.token.token);
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -27,12 +28,8 @@ export default function LoginPage() {
       password,
     };
 
-    const token = await login(loginData);
-
-    if (token) {
-      dispatch(setToken(token));
-      navigate("/");
-    }
+    dispatch(getTokenAndSetToken(loginData));
+    navigate("/");
   };
 
   return (
