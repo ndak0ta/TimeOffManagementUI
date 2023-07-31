@@ -3,7 +3,6 @@ import Title from "./Title";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import {
-  deleteTimeOffAndSetTimeOffs,
   getTimeOffsAndSetTimeOffs,
 } from "../../redux/timeOffThunks";
 import "dayjs/locale/tr";

@@ -69,6 +69,7 @@ export const createTimeOff = async (token: string, timeOff: ITimeOffRequest) => 
   
   export const updateTimeOff = async (token: string, timeOff: ITimeOffRequest) => {
     try {
+      console.log(timeOff);
       const response = await axios.put("/timeoff", timeOff, {
         headers: {
           Authorization: `Bearer ${token}`,

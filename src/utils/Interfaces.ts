@@ -32,6 +32,13 @@ export interface ITimeOffRequest {
     endDate: Date;
 }
 
+export interface ITimeOffUpdate {
+    id: number;
+    description: string;
+    startDate: Date;
+    endDate: Date;
+}
+
 export interface IUser {
     id: number;
     username: string;

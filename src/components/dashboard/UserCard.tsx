@@ -12,13 +12,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Title from "./Title";
 import { ITimeOffRequest } from "../../utils/Interfaces";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { createTimeOff } from "../../utils/Api/TimeOffApi";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import "dayjs/locale/tr";
 import { createTimeOffAndSetTimeOffs } from "../../redux/timeOffThunks";
 import { AppDispatch } from "../../redux/store";
 import { getUserInfoAndSetUserInfo } from "../../redux/userInfoThunks";
+import TimeOffDialog from "./TimeOffDialog";
 
 export default function UserCard() {
   // TODO daha sonra ismini değiştir
@@ -38,14 +38,8 @@ export default function UserCard() {
     setOpenTimeOffDialog(false);
   };
 
-  const handleSendTimeOff = async () => {
-    setOpenTimeOffDialog(false);
-
-    const timeOff: ITimeOffRequest = {
-      description: description,
-      startDate: startDate,
-      endDate: endDate,
-    };
+  const handleSendTimeOff = async (timeOff: ITimeOffRequest) => {
+    handleClose();
 
     await dispatch(createTimeOffAndSetTimeOffs({ token, timeOff }));
   };
@@ -73,53 +67,13 @@ export default function UserCard() {
         <Link color="primary" href="#" onClick={handleClickOpen}>
           İzin talebi oluştur
         </Link>
-        <Dialog open={openTimeOffDialog} onClose={handleClose}>
-          <DialogTitle>İzin talebi oluştur</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              İzin talebi oluşturmak için başlangıç ve bitiş tarihlerini
-              giriniz.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="description"
-              label="Açıklama"
-              type="text"
-              fullWidth
-              variant="standard"
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">
-              <DatePicker
-                label="Başlangıç tarihi"
-                onChange={(date: Date | null) =>
-                  date ? setStartDate(date) : null
-                }
-                format="DD/MM/YYYY"
-                // @ts-ignore
-                defaultValue={dayjs(new Date())}
-                sx={{ marginBottom: "8px", width: "100%" }}
-              />
-              <DatePicker
-                label="Bitiş tarihi"
-                onChange={(date: Date | null) =>
-                  date ? setEndDate(date) : null
-                }
-                format="DD/MM/YYYY"
-                // @ts-ignore
-                defaultValue={dayjs(
-                  new Date().setDate(new Date().getDate() + 1)
-                )}
-                sx={{ width: "100%" }}
-              />
-            </LocalizationProvider>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>İptal</Button>
-            <Button onClick={handleSendTimeOff}>Gönder</Button>
-          </DialogActions>
-        </Dialog>
+        <TimeOffDialog
+          openTimeOffDialog={openTimeOffDialog}
+          handleClose={handleClose}
+          operation={{type: "request", function: handleSendTimeOff}}
+          title="İzin talebi oluştur"
+          contentText="İzin talebi oluşturmak için gerekli alanları doldurunuz."
+        />
       </div>
     </Fragment>
   );
