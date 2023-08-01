@@ -13,7 +13,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import "dayjs/locale/tr";
 import { ITimeOffRequest, ITimeOffUpdate } from "../../utils/Interfaces";
-import { time } from "console";
 
 function isTimeOffRequest(obj: any) {
   return (
@@ -48,19 +47,23 @@ export default function TimeOffDialog({
   endDateBefore?: Date;
 }) {
   const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(dayjs(new Date()));
+  const [endDate, setEndDate] = useState(dayjs(new Date()));
 
   const handleOperation = async () => {
     if (operation.type === "request") {
-      const timeOff: ITimeOffRequest = { description, startDate, endDate };
+      const timeOff: ITimeOffRequest = {
+        description: description,
+        startDate: startDate.toDate(),
+        endDate: endDate.toDate(),
+      };
       operation.function(timeOff);
     } else if (operation.type === "update") {
       const timeOff: ITimeOffUpdate = {
         id: id ? id : 0,
         description: description,
-        startDate: startDate,
-        endDate: endDate,
+        startDate: startDate.toDate(),
+        endDate: endDate.toDate(),
       };
       await operation.function(timeOff);
     }
@@ -70,8 +73,12 @@ export default function TimeOffDialog({
 
   useEffect(() => {
     setDescription(descriptionBefore ? descriptionBefore : "");
-    setStartDate(startDateBefore ? startDateBefore : new Date());
-    setEndDate(endDateBefore ? endDateBefore : new Date());
+    setStartDate(
+      startDateBefore ? dayjs(startDateBefore) : dayjs(new Date()).add(1, "day")
+    );
+    setEndDate(
+      endDateBefore ? dayjs(endDateBefore) : dayjs(new Date()).add(1, "day")
+    );
   }, []);
 
   return (
@@ -88,12 +95,15 @@ export default function TimeOffDialog({
           fullWidth
           variant="standard"
           defaultValue={descriptionBefore}
+          inputProps={{ maxLength: 255 }}
           onChange={(e) => setDescription(e.target.value)}
         />
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">
           <DatePicker
             label="Başlangıç tarihi"
-            onChange={(date: Date | null) => (date ? setStartDate(date) : null)}
+            onChange={(date: Date | null) =>
+              date ? setStartDate(dayjs(date)) : null
+            }
             format="DD/MM/YYYY"
             // @ts-ignore
             defaultValue={
@@ -106,7 +116,9 @@ export default function TimeOffDialog({
           />
           <DatePicker
             label="Bitiş tarihi"
-            onChange={(date: Date | null) => (date ? setEndDate(date) : null)}
+            onChange={(date: Date | null) =>
+              date ? setEndDate(dayjs(date)) : null
+            }
             format="DD/MM/YYYY"
             // @ts-ignore
             defaultValue={
@@ -114,6 +126,7 @@ export default function TimeOffDialog({
                 ? dayjs(endDateBefore)
                 : dayjs(new Date()).add(1, "day")
             }
+            // @ts-ignore
             minDate={startDate}
             sx={{ width: "100%" }}
           />

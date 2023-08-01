@@ -16,7 +16,6 @@ import { AppDispatch } from "../redux/store";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const token = useSelector((state: any) => state.token.token);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -28,8 +27,9 @@ export default function LoginPage() {
       password,
     };
 
-    dispatch(getTokenAndSetToken(loginData));
-    navigate("/");
+    dispatch(getTokenAndSetToken(loginData)).then(() => {
+      navigate("/");
+    });
   };
 
   return (
