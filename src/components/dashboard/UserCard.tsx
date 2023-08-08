@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Title from "./Title";
-import { ITimeOffRequest } from "../../utils/Interfaces";
+import { ITimeOffRequest, IUserInfo } from "../../utils/Interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { createTimeOffAndSetTimeOffs } from "../../redux/timeOffThunks";
 import { AppDispatch } from "../../redux/store";
@@ -14,7 +14,7 @@ export default function UserCard() {
   const [openTimeOffDialog, setOpenTimeOffDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const token = useSelector((state: any) => state.token.token);
-  const user = useSelector((state: any) => state.userInfo);
+  const user: IUserInfo = useSelector((state: any) => state.userInfo.user);
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClickOpen = () => {
@@ -44,26 +44,32 @@ export default function UserCard() {
   return (
     <Fragment>
       <Title>
-        {user.user.firstName} {user.user.lastName}
+        {user.firstName} {user.lastName}
       </Title>
       <Typography color="text.secondary" sx={{ flex: 1 }}></Typography>
-      <Typography component="p">
-        Yıllık izin bakiyesi: {user.user.remainingAnnualTimeOffs} /{" "}
-        {user.user.annualTimeOffs}
-      </Typography>
-      <Typography component="p">Ünvan: {user.user.roles}</Typography>
-      <div>
-        <Link color="primary" href="#" onClick={handleClickOpen}>
-          İzin talebi oluştur
-        </Link>
-        <TimeOffDialog
-          openTimeOffDialog={openTimeOffDialog}
-          handleClose={handleClose}
-          operation={{ type: "request", function: handleSendTimeOff }}
-          title="İzin talebi oluştur"
-          contentText="İzin talebi oluşturmak için gerekli alanları doldurunuz."
-        />
-      </div>
+      {user.roles?.includes("Manager") ? (
+        <Typography component="p">Ünvan: {user.roles}</Typography>
+      ) : (
+        <Fragment>
+          <Typography component="p">
+            Yıllık izin bakiyesi: {user.remainingAnnualTimeOffs} /{" "}
+            {user.annualTimeOffs}
+          </Typography>
+          <Typography component="p">Ünvan: {user.roles}</Typography>
+          <div>
+            <Link color="primary" href="#" onClick={handleClickOpen}>
+              İzin talebi oluştur
+            </Link>
+            <TimeOffDialog
+              openTimeOffDialog={openTimeOffDialog}
+              handleClose={handleClose}
+              operation={{ type: "request", function: handleSendTimeOff }}
+              title="İzin talebi oluştur"
+              contentText="İzin talebi oluşturmak için gerekli alanları doldurunuz."
+            />
+          </div>
+        </Fragment>
+      )}
     </Fragment>
   );
 }

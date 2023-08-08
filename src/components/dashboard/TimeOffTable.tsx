@@ -1,23 +1,24 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import {
-  ITimeOff,
-  ITimeOffRequest,
-  ITimeOffUpdate,
-} from "../../utils/Interfaces";
+import { ITimeOff, ITimeOffUpdate } from "../../utils/Interfaces";
 import dayjs from "dayjs";
 import { Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import {
   deleteTimeOffAndSetTimeOffs,
+  getTimeOffsAndSetTimeOffs,
   updateTimeOffAndSetTimeOffs,
 } from "../../redux/timeOffThunks";
 import TimeOffDialog from "./TimeOffDialog";
+import {
+  createTimeOffCancelAndSetTimeOffCancels,
+  deleteTimeOffCancelAndSetTimeOffCancels,
+} from "../../redux/timeOffCancelThunks";
 
 export default function TimeOffTable({ timeOff }: any) {
   const [openDialog, setOpenDialog] = useState<Number | null>(null);
@@ -34,6 +35,22 @@ export default function TimeOffTable({ timeOff }: any) {
 
   const handleDeleteTimeOff = async (timeOffId: number) => {
     await dispatch(deleteTimeOffAndSetTimeOffs({ token, timeOffId }));
+  };
+
+  const handleCancelTimeOff = async (timeOffId: number) => {
+    await dispatch(
+      createTimeOffCancelAndSetTimeOffCancels({ token, timeOffId })
+    ).then(async () => {
+      await dispatch(getTimeOffsAndSetTimeOffs(token));
+    });
+  };
+
+  const handleDeleteCancelTimeOff = async (timeOffCancelId: number) => {
+    await dispatch(
+      deleteTimeOffCancelAndSetTimeOffCancels({ token, timeOffCancelId })
+    ).then(async () => {
+      await dispatch(getTimeOffsAndSetTimeOffs(token));
+    });
   };
 
   return (
@@ -65,37 +82,35 @@ export default function TimeOffTable({ timeOff }: any) {
             <TableCell>
               {timeOff.isApproved ? "Onaylandı" : "Onaylanmadı"}
             </TableCell>
-            <TableCell>
-              {timeOff.isApproved ||
-              (!timeOff.isApproved && !timeOff.isPending) ? null : (
-                <Fragment>
-                  <Button
-                    variant="text"
-                    color="success"
-                    onClick={() => setOpenDialog(timeOff.id)}
-                  >
-                    Düzenle
-                  </Button>
-                  <TimeOffDialog
-                    openTimeOffDialog={openDialog === timeOff.id}
-                    handleClose={handleClose}
-                    operation={{
-                      type: "update",
-                      function: handleUpdateTimeOff,
-                    }}
-                    title="İzin Düzenle"
-                    contentText="İzin düzenlemek üzeresiniz."
-                    id={timeOff.id}
-                    descriptionBefore={timeOff.description}
-                    startDateBefore={timeOff.startDate}
-                    endDateBefore={timeOff.endDate}
-                  />
-                </Fragment>
-              )}
-            </TableCell>
-            <TableCell>
-              {timeOff.isApproved ||
-              (!timeOff.isApproved && !timeOff.isPending) ? null : (
+            {timeOff.isApproved ||
+            (!timeOff.isApproved && !timeOff.isPending) ? null : (
+              <TableCell>
+                <Button
+                  variant="text"
+                  color="success"
+                  onClick={() => setOpenDialog(timeOff.id)}
+                >
+                  Düzenle
+                </Button>
+                <TimeOffDialog
+                  openTimeOffDialog={openDialog === timeOff.id}
+                  handleClose={handleClose}
+                  operation={{
+                    type: "update",
+                    function: handleUpdateTimeOff,
+                  }}
+                  title="İzin Düzenle"
+                  contentText="İzin düzenlemek üzeresiniz."
+                  id={timeOff.id}
+                  descriptionBefore={timeOff.description}
+                  startDateBefore={timeOff.startDate}
+                  endDateBefore={timeOff.endDate}
+                />
+              </TableCell>
+            )}
+            {timeOff.isApproved ||
+            (!timeOff.isApproved && !timeOff.isPending) ? null : (
+              <TableCell>
                 <Button
                   variant="text"
                   color="error"
@@ -103,8 +118,31 @@ export default function TimeOffTable({ timeOff }: any) {
                 >
                   Sil
                 </Button>
-              )}
-            </TableCell>
+              </TableCell>
+            )}
+            {timeOff.isApproved ? (
+              !timeOff.hasCancelRequest ? (
+                <TableCell>
+                  <Button
+                    variant="text"
+                    color="error"
+                    onClick={() => handleCancelTimeOff(timeOff.id)}
+                  >
+                    İptal Talebi Gönder
+                  </Button>
+                </TableCell>
+              ) : (
+                <TableCell>
+                  <Button
+                    variant="text"
+                    color="error"
+                    onClick={() => handleDeleteCancelTimeOff(timeOff.id)}
+                  >
+                    İptal Talebini Geri Al
+                  </Button>
+                </TableCell>
+              )
+            ) : null}
           </TableRow>
         ))}
       </TableBody>

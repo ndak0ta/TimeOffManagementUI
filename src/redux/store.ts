@@ -3,10 +3,12 @@ import { persistStore } from "redux-persist";
 import userInfoReducer from "./userInfoReducer";
 import tokenReducer from "./tokenReducer";
 import timeOffReducer from "./timeOffReducer";
+import userReducer from "./userReducer";
 
 const store = configureStore({
   reducer: {
     token: tokenReducer,
+    user: userReducer,
     userInfo: userInfoReducer,
     timeOff: timeOffReducer,
   }

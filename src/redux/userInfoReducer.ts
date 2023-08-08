@@ -3,13 +3,13 @@ import { IUserInfo } from "../utils/Interfaces";
 import { getUserInfoAndSetUserInfo } from "./userInfoThunks";
 
 
-export interface UserState {
+export interface UserInfoState {
     user: IUserInfo | null;
     loading: boolean;
     error: string | null;
 }
 
-const initialState: UserState = {
+const initialState: UserInfoState = {
     user: null,
     loading: true,
     error: null,

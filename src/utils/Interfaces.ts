@@ -24,6 +24,9 @@ export interface ITimeOff {
     isPending: boolean;
     isApproved: boolean;
     createdAt: Date;
+    isCancelled: boolean;
+    userId: string;
+    hasCancelRequest?: boolean;
 }
 
 export interface ITimeOffRequest {
@@ -39,8 +42,12 @@ export interface ITimeOffUpdate {
     endDate: Date;
 }
 
+export interface ITimeOffCancel {
+    timeOffId: number;
+}
+
 export interface IUser {
-    id: number;
+    id: string;
     username: string;
     email: string;
     firstName: string;

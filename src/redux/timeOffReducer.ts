@@ -1,7 +1,6 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { ITimeOff } from "../utils/Interfaces";
-import { createTimeOffAndSetTimeOffs, deleteTimeOffAndSetTimeOffs, getTimeOffsAndSetTimeOffs, updateTimeOffAndSetTimeOffs } from "./timeOffThunks";
-import { createTimeOff } from "../utils/Api/TimeOffApi";
+import { createTimeOffAndSetTimeOffs, deleteTimeOffAndSetTimeOffs, getAllTimeOffsAndSetAllTimeOffs, getTimeOffsAndSetTimeOffs, updateTimeOffAndSetTimeOffs } from "./timeOffThunks";
 
 interface TimeOffState {
     timeOff: ITimeOff | null;
@@ -36,6 +35,10 @@ const timeOffSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+        .addCase(getAllTimeOffsAndSetAllTimeOffs.pending, setLoadingAndClearError)
+        .addCase(getAllTimeOffsAndSetAllTimeOffs.fulfilled, setTimeOffAndClearLoading)
+        .addCase(getAllTimeOffsAndSetAllTimeOffs.rejected, setErrorAndClearLoading)
+
         .addCase(getTimeOffsAndSetTimeOffs.pending, setLoadingAndClearError)
         .addCase(getTimeOffsAndSetTimeOffs.fulfilled, setTimeOffAndClearLoading)
         .addCase(getTimeOffsAndSetTimeOffs.rejected, setErrorAndClearLoading)

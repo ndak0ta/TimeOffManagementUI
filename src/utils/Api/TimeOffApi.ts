@@ -16,7 +16,7 @@ export const getTimeOff = async (token: string) => {
 
 export const getTimeOffAll = async (token: string) => {
   try {
-    const response = await axios.get("/timeoff", {
+    const response = await axios.get("/timeoff/all", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -94,9 +94,9 @@ export const createTimeOff = async (token: string, timeOff: ITimeOffRequest) => 
     }
   };
   
-  export const approveTimeOff = async (token: string, id: number) => {
+  export const approveTimeOff = async (token: string, id: number, status: boolean) => {
     try {
-      const response = await axios.post(`/timeoff/${id}/approve`, null, {
+      const response = await axios.post(`/timeoff/${id}/approve`, status, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

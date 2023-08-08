@@ -44,26 +44,38 @@ export default function TimeOffs() {
               <Tab label="Bekleyen" value="1" />
               <Tab label="Onaylananlar" value="2" />
               <Tab label="Reddedilenler" value="3" />
+              <Tab label="İptal edilenler" value="4" />
             </TabList>
           </Box>
           <TabPanel value="1">
             <TimeOffTable
               timeOff={timeOff.timeOff.filter(
-                (timeOff: ITimeOff) => timeOff.isPending
+                (timeOff: ITimeOff) => timeOff.isPending && !timeOff.isCancelled
               )}
             />
           </TabPanel>
           <TabPanel value="2">
             <TimeOffTable
               timeOff={timeOff.timeOff.filter(
-                (timeOff: ITimeOff) => timeOff.isApproved
+                (timeOff: ITimeOff) =>
+                  timeOff.isApproved && !timeOff.isCancelled
               )}
             />
           </TabPanel>
           <TabPanel value="3">
             <TimeOffTable
               timeOff={timeOff.timeOff.filter(
-                (timeOff: ITimeOff) => !timeOff.isApproved && !timeOff.isPending
+                (timeOff: ITimeOff) =>
+                  !timeOff.isApproved &&
+                  !timeOff.isPending &&
+                  !timeOff.isCancelled
+              )}
+            />
+          </TabPanel>
+          <TabPanel value="4">
+            <TimeOffTable
+              timeOff={timeOff.timeOff.filter(
+                (timeOff: ITimeOff) => timeOff.isCancelled
               )}
             />
           </TabPanel>

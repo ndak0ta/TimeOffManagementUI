@@ -16,8 +16,6 @@ export default function DashboardProfile() {
     dispatch(getUserInfoAndSetUserInfo(token)).then(() => {
       setLoading(false);
     });
-
-    console.log(user);
   }, []);
 
   if (loading) {
@@ -128,8 +126,7 @@ export default function DashboardProfile() {
           />
         </Box>
         <Typography>
-          Bu bilgilerde bir hata olduğunu düşünüyorsanız amirinize
-          bildiriniz
+          Bu bilgilerde bir hata olduğunu düşünüyorsanız amirinize bildiriniz
         </Typography>
       </Paper>
     </DashboardLayout>

@@ -65,6 +65,7 @@ export default function TimeOffDialog({
         startDate: startDate.toDate(),
         endDate: endDate.toDate(),
       };
+      
       await operation.function(timeOff);
     }
 
