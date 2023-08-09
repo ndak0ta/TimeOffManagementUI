@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, SyntheticEvent, useEffect, useState } from "react";
 import Title from "./Title";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
@@ -15,9 +15,9 @@ export default function TimeOffs() {
   const timeOff = useSelector((state: any) => state.timeOff);
   const dispatch = useDispatch<AppDispatch>();
 
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = useState("1");
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleTabChange = (event: SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 

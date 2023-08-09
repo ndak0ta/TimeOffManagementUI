@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ITimeOff } from "../utils/Interfaces";
-import { createTimeOffAndSetTimeOffs, deleteTimeOffAndSetTimeOffs, getAllTimeOffsAndSetAllTimeOffs, getTimeOffsAndSetTimeOffs, updateTimeOffAndSetTimeOffs } from "./timeOffThunks";
+import { approveTimeOffAndSetTimeOffs, createTimeOffAndSetTimeOffs, deleteTimeOffAndSetTimeOffs, getAllTimeOffsAndSetAllTimeOffs, getTimeOffsAndSetTimeOffs, updateTimeOffAndSetTimeOffs } from "./timeOffThunks";
 
 interface TimeOffState {
     timeOff: ITimeOff | null;
@@ -53,7 +53,11 @@ const timeOffSlice = createSlice({
 
         .addCase(deleteTimeOffAndSetTimeOffs.pending, setLoadingAndClearError)
         .addCase(deleteTimeOffAndSetTimeOffs.fulfilled, setTimeOffAndClearLoading)
-        .addCase(deleteTimeOffAndSetTimeOffs.rejected, setErrorAndClearLoading);
+        .addCase(deleteTimeOffAndSetTimeOffs.rejected, setErrorAndClearLoading)
+
+        .addCase(approveTimeOffAndSetTimeOffs.pending, setLoadingAndClearError)
+        .addCase(approveTimeOffAndSetTimeOffs.fulfilled, setTimeOffAndClearLoading)
+        .addCase(approveTimeOffAndSetTimeOffs.rejected, setErrorAndClearLoading)
     }
 });
 

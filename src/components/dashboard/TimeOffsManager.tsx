@@ -1,90 +1,95 @@
-import React, { useEffect } from "react";
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+import React, { Fragment, SyntheticEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
-import {
-  approveTimeOffAndSetTimeOffs,
-  getAllTimeOffsAndSetAllTimeOffs,
-} from "../../redux/timeOffThunks";
+import { getAllTimeOffsAndSetAllTimeOffs } from "../../redux/timeOffThunks";
 import { getAllUserAndSetAllUser } from "../../redux/userThunks";
 import { ITimeOff, IUser } from "../../utils/Interfaces";
-import dayjs from "dayjs";
+import TimeOffTableManager from "./TimeOffTableManager";
+import Title from "./Title";
+import { Box, Tab } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 export default function TimeOffsManager() {
-  const [loading, setLoading] = React.useState(true);
+  const [timeOffsloading, setTimeOffsloading] = useState(true);
+  const [usersLoading, setUsersLoading] = useState(true);
+  const [tabValue, setTabValue] = useState("1");
   const token = useSelector((state: any) => state.token.token);
   const timeOffs = useSelector((state: any) => state.timeOff.timeOff);
   const users: IUser[] = useSelector((state: any) => state.user.user);
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleApproveTimeOff = async (timeOffId: number, status: boolean) => {
-    await dispatch(approveTimeOffAndSetTimeOffs({ token, timeOffId, status }));
+  const handleTabChange = (event: SyntheticEvent, newValue: string) => {
+    setTabValue(newValue);
   };
 
   useEffect(() => {
-    dispatch(getAllTimeOffsAndSetAllTimeOffs(token));
-    dispatch(getAllUserAndSetAllUser(token));
-    setLoading(false);
+    dispatch(getAllTimeOffsAndSetAllTimeOffs(token)).then(() =>
+      setTimeOffsloading(false)
+    );
+    dispatch(getAllUserAndSetAllUser(token)).then(() => setUsersLoading(false));
   }, [dispatch, token]);
 
-  if (!timeOffs || !users || loading) {
+  if (timeOffsloading || usersLoading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <Table size="small">
-      <TableHead>
-        <TableRow>
-          <TableCell align="center">Çalışan</TableCell>
-          <TableCell align="center">Açıklama</TableCell>
-          <TableCell align="center">Başlangıç Tarihi</TableCell>
-          <TableCell align="center">Bitiş Tarihi</TableCell>
-          <TableCell align="center">İşlemler</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {timeOffs.map((timeOff: ITimeOff) => (
-          <TableRow key={timeOff.id}>
-            <TableCell align="center">
-              {users.find((u) => u.id === timeOff.userId)?.firstName}{" "}
-              {users.find((u) => u.id === timeOff.userId)?.lastName}
-            </TableCell>
-            <TableCell align="center">{timeOff.description}</TableCell>
-            <TableCell align="center">
-              {dayjs(timeOff.startDate).locale("tr").format("dddd DD/MM/YYYY")}
-            </TableCell>
-            <TableCell align="center">
-              {dayjs(timeOff.endDate).locale("tr").format("dddd DD/MM/YYYY")}
-            </TableCell>
-            <TableCell align="center">
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                sx={{ marginRight: 1 }}
-                onClick={() => handleApproveTimeOff(timeOff.id, true)}
-              >
-                Onayla
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                size="small"
-                onClick={() => handleApproveTimeOff(timeOff.id, false)}
-              >
-                Reddet
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <Fragment>
+      <Title>İzin istekleri</Title>
+      <Box sx={{ width: "100%", typography: "body1" }}>
+        <TabContext value={tabValue}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList
+              onChange={handleTabChange}
+              aria-label="lab API tabs example"
+            >
+              <Tab label="Hepsi" value="1" />
+              <Tab label="Bekleyen" value="2" />
+              <Tab label="Bekleyen iptal" value="3" />
+              <Tab label="Onaylananlar" value="4" />
+              <Tab label="Reddedilenler" value="5" />
+              <Tab label="İptal edilenler" value="6" />
+            </TabList>
+          </Box>
+          <TabPanel value="1">
+            <TimeOffTableManager timeOffs={timeOffs} users={users} />
+          </TabPanel>
+          <TabPanel value="2">
+            <TimeOffTableManager
+              timeOffs={timeOffs.filter((t: ITimeOff) => t.isPending)}
+              users={users}
+            />
+          </TabPanel>
+          <TabPanel value="3">
+            <TimeOffTableManager
+              timeOffs={timeOffs.filter(
+                (t: ITimeOff) => t.isApproved && t.hasCancelRequest
+              )}
+              users={users}
+            />
+          </TabPanel>
+          <TabPanel value="4">
+            <TimeOffTableManager
+              timeOffs={timeOffs.filter((t: ITimeOff) => t.isApproved)}
+              users={users}
+            />
+          </TabPanel>
+          <TabPanel value="5">
+            <TimeOffTableManager
+              timeOffs={timeOffs.filter(
+                (t: ITimeOff) => !t.isApproved && !t.isPending && !t.isCancelled
+              )}
+              users={users}
+            />
+          </TabPanel>
+          <TabPanel value="6">
+            <TimeOffTableManager
+              timeOffs={timeOffs.filter((t: ITimeOff) => t.isCancelled)}
+              users={users}
+            />
+          </TabPanel>
+        </TabContext>
+      </Box>
+    </Fragment>
   );
 }

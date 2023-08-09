@@ -1,5 +1,6 @@
 import axios from "./Api";
-import { ITimeOff, ITimeOffRequest } from "../Interfaces";
+import { ITimeOffRequest } from "../Interfaces";
+
 
 export const getTimeOff = async (token: string) => {
   try {
@@ -94,13 +95,16 @@ export const createTimeOff = async (token: string, timeOff: ITimeOffRequest) => 
     }
   };
   
-  export const approveTimeOff = async (token: string, id: number, status: boolean) => {
+  export const approveTimeOff = async (token: string, id: number, isApproved: boolean) => {
     try {
-      const response = await axios.post(`/timeoff/${id}/approve`, status, {
+      const response = await axios.post(`/timeoff/${id}/approve?isApproved=${isApproved}`, "", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      console.log(isApproved);
+
       return response.data;
     } catch (error) {
       console.error(error);

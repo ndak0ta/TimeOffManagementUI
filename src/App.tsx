@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import DashboardMain from "./pages/DashboardMain";
@@ -25,6 +25,10 @@ export default function App() {
       element: <LoginPage />,
     },
   ]);
+
+  useEffect(() => {
+    document.title = "İzin Takip Sistemi";
+  }, []);
 
   return (
     <Provider store={store}>
