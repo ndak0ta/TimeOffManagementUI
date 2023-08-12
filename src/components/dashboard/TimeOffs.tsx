@@ -7,7 +7,6 @@ import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import TimeOffTable from "./TimeOffTable";
 import { ITimeOff } from "../../utils/Interfaces";
-import "dayjs/locale/tr";
 
 export default function TimeOffs() {
   const [loading, setLoading] = useState(true);

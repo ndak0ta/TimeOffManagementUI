@@ -43,6 +43,14 @@ export interface ITimeOffUpdate {
 }
 
 export interface ITimeOffCancel {
+    id: number;
+    timeOffId: number;
+    userId: string;
+    isApproved: boolean;
+    isPending: boolean;
+}
+
+export interface ITimeOffCancelRequest {
     timeOffId: number;
 }
 

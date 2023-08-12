@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
 import { getTokenAndSetToken } from "./tokenThunks";
-import exp from "constants";
 
 interface TokenState {
   token: string | null;

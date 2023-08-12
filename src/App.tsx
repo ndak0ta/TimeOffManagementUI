@@ -8,6 +8,8 @@ import ErrorPage from "./pages/ErrorPage";
 import DashboardProfile from "./pages/DashboardProfile";
 import LoginPage from "./pages/LoginPage";
 import { PersistGate } from "redux-persist/integration/react";
+import { ThemeProvider } from "styled-components";
+import { theme } from "./utils/Theme";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -31,10 +33,12 @@ export default function App() {
   }, []);
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router} />
-      </PersistGate>
-    </Provider>
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
+      </Provider>
+    </ThemeProvider>
   );
 }

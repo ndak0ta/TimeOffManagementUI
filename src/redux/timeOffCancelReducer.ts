@@ -51,3 +51,5 @@ const timeOffCancelSlice = createSlice({
         .addCase(approveOrDeclineTimeOffCancelAndSetTimeOffCancels.rejected, setErrorAndClearLoading);
     }
 });
+
+export default timeOffCancelSlice.reducer;

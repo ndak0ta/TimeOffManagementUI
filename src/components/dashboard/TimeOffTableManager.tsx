@@ -112,7 +112,7 @@ export default function TimeOffTableManager({
                   color="primary"
                   size="small"
                   sx={{ marginRight: 1 }}
-                  onClick={() => handleApproveTimeOff(timeOff.id, true)}
+                  onClick={() => handleApproveTimeOffCancel(timeOff.id, true)}
                 >
                   Onayla
                 </Button>
@@ -120,7 +120,7 @@ export default function TimeOffTableManager({
                   variant="contained"
                   color="error"
                   size="small"
-                  onClick={() => handleApproveTimeOff(timeOff.id, false)}
+                  onClick={() => handleApproveTimeOffCancel(timeOff.id, false)}
                 >
                   Reddet
                 </Button>

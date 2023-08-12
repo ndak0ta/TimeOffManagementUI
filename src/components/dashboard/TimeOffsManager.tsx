@@ -8,13 +8,18 @@ import TimeOffTableManager from "./TimeOffTableManager";
 import Title from "./Title";
 import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { getTimeOffCancelsAndSetTimeOffCancels } from "../../redux/timeOffCancelThunks";
 
 export default function TimeOffsManager() {
   const [timeOffsloading, setTimeOffsloading] = useState(true);
   const [usersLoading, setUsersLoading] = useState(true);
+  const [timeOffCancelsLoading, setTimeOffCancelsLoading] = useState(true);
   const [tabValue, setTabValue] = useState("1");
   const token = useSelector((state: any) => state.token.token);
   const timeOffs = useSelector((state: any) => state.timeOff.timeOff);
+  const timeOffCancels = useSelector(
+    (state: any) => state.timeOffCancel.timeOffCancel
+  );
   const users: IUser[] = useSelector((state: any) => state.user.user);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -27,9 +32,12 @@ export default function TimeOffsManager() {
       setTimeOffsloading(false)
     );
     dispatch(getAllUserAndSetAllUser(token)).then(() => setUsersLoading(false));
+    dispatch(getTimeOffCancelsAndSetTimeOffCancels(token)).then(() =>
+      setTimeOffCancelsLoading(false)
+    );
   }, [dispatch, token]);
 
-  if (timeOffsloading || usersLoading) {
+  if (timeOffsloading || usersLoading || timeOffCancelsLoading) {
     return <div>Loading...</div>;
   }
 
@@ -45,7 +53,7 @@ export default function TimeOffsManager() {
             >
               <Tab label="Hepsi" value="1" />
               <Tab label="Bekleyen" value="2" />
-              <Tab label="Bekleyen iptal" value="3" />
+              <Tab label="Bekleyen İptal" value="3" />
               <Tab label="Onaylananlar" value="4" />
               <Tab label="Reddedilenler" value="5" />
               <Tab label="İptal edilenler" value="6" />

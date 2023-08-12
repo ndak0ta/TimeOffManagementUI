@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import UserCard from "../components/dashboard/UserCard";
 import TimeOffs from "../components/dashboard/TimeOffs";
@@ -12,7 +12,7 @@ import { getUserInfoAndSetUserInfo } from "../redux/userInfoThunks";
 import TimeOffsManager from "../components/dashboard/TimeOffsManager";
 
 export default function DashboardMain() {
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
   const token = useSelector((state: any) => state.token.token);
   const user: IUserInfo = useSelector((state: any) => state.userInfo.user);
   const dispat = useDispatch<AppDispatch>();

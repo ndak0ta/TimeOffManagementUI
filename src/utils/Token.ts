@@ -3,7 +3,7 @@ export const tokenClaimNames = {
     iat: "iat",
     iss: "iss",
     aud: "aud",
-    sub: "sub",
+    sub: "sub", // TODO sonra değiştir
     roles: "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
 };
 

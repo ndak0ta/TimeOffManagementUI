@@ -4,6 +4,7 @@ import userInfoReducer from "./userInfoReducer";
 import tokenReducer from "./tokenReducer";
 import timeOffReducer from "./timeOffReducer";
 import userReducer from "./userReducer";
+import timeOffCancelReducer from "./timeOffCancelReducer";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     user: userReducer,
     userInfo: userInfoReducer,
     timeOff: timeOffReducer,
+    timeOffCancel: timeOffCancelReducer,
   }
 });
 
