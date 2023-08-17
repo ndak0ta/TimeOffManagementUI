@@ -1,43 +1,37 @@
 {
-  "name": "time-off-management-app",
+  "name": "time-off-management-ui",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^7.1.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@fontsource/roboto": "^5.0.5",
-    "@mui/icons-material": "^5.14.1",
-    "@mui/lab": "^5.0.0-alpha.137",
-    "@mui/material": "^5.14.2",
-    "@mui/styled-engine-sc": "^5.12.0",
-    "@mui/x-date-pickers": "^6.10.1",
-    "@reduxjs/toolkit": "^1.9.5",
-    "@testing-library/jest-dom": "^5.16.5",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.4",
+    "@mui/x-date-pickers": "^6.11.1",
+    "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.38",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
-    "@types/react-router-dom": "^5.3.3",
+    "@types/node": "^16.18.40",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
     "axios": "^1.4.0",
     "dayjs": "^1.11.9",
     "react": "^18.2.0",
-    "react-devtools": "^4.28.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.1.1",
-    "react-router-dom": "^6.14.2",
+    "react-error-boundary": "^4.0.11",
+    "react-query-auth": "^2.2.0",
+    "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
-    "redux-persist": "^6.0.0",
-    "styled-components": "^6.0.5",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "GENERATE_SOURCEMAP=false craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject"
   },
   "eslintConfig": {
     "extends": [
@@ -58,6 +52,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@tanstack/react-query": "^4.32.6",
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7"
   }
 }
