@@ -3,9 +3,12 @@ import { useUser } from "@lib/auth";
 import { formatDate } from "@utils/format";
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { UpdateContact } from "../components/UpdateContact";
+import ChangePassword from "../components/ChangePassword";
 
 export function UserProfile() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [openChangePasswordDialog, setOpenChangePasswordDialog] =
+    useState(false);
   const user = useUser().data || {
     id: "",
     firstName: "",
@@ -18,14 +21,6 @@ export function UserProfile() {
     annualTimeOffs: 0,
     remainingAnnualTimeOffs: 0,
     roles: [""],
-  };
-
-  const handleUpdateDialogOpen = () => {
-    setOpenUpdateDialog(true);
-  };
-
-  const handleUpdateDialogClose = () => {
-    setOpenUpdateDialog(false);
   };
 
   return (
@@ -116,13 +111,26 @@ export function UserProfile() {
           value={user.roles}
           sx={{ mb: 2 }}
         />
-        <Button variant="contained" onClick={handleUpdateDialogOpen}>
+        <Button variant="contained" onClick={() => setOpenUpdateDialog(true)}>
           İletişim bilgilerini güncelle
+        </Button>
+        <Button
+          variant="contained"
+          color="warning"
+          sx={{ mt: 2 }}
+          onClick={() => setOpenChangePasswordDialog(true)}
+        >
+          Şifreni değiştir
         </Button>
         <UpdateContact
           open={openUpdateDialog}
           user={user}
-          handleClose={handleUpdateDialogClose}
+          handleClose={() => setOpenUpdateDialog(false)}
+        />
+        <ChangePassword
+          id={user.id}
+          open={openChangePasswordDialog}
+          handleClose={() => setOpenChangePasswordDialog(false)}
         />
       </Box>
       <Typography>

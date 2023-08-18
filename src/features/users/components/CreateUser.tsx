@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useCreateUser } from "../api/createUser";
 import {
   Button,
   Dialog,
@@ -5,45 +7,42 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Snackbar,
   TextField,
 } from "@mui/material";
-import { useUpdateUser } from "../api/updateUser";
-import { useState } from "react";
-import { DateTimePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
-import { User } from "../types";
+import { DatePicker } from "@mui/x-date-pickers";
+import { Alert } from "@components/Alert";
 
-type UpdateUserProps = {
+type CreateUserProps = {
   open: boolean;
-  user: User;
   handleClose: () => void;
 };
 
-export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
-  const updateUser = useUpdateUser();
+export const CreateUser = ({ open, handleClose }: CreateUserProps) => {
+  const createUser = useCreateUser();
   const [values, setValues] = useState({
-    id: user.id,
-    userName: user.userName,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    phoneNumber: user.phoneNumber,
-    address: user.address,
-    dateOfBirth: user.dateOfBirth,
-    hireDate: user.hireDate,
+    id: "",
+    userName: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    dateOfBirth: new Date(),
+    hireDate: new Date(),
   });
 
-  const handleUpdate = async () => {
-    await updateUser.mutateAsync(values);
+  const handleCreate = async () => {
+    await createUser.mutateAsync(values);
     handleClose();
   };
-
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Kullanıcıyı güncelle</DialogTitle>
+      <DialogTitle>Kullanıcıyı oluştur</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Kullanıcıyı güncellemek üzeresiniz.
+          Kullanıcıyı oluşturmak üzeresiniz. Kullanıcı şifresi rastgele
+          oluşturulup mail olarak iletilecektir.
         </DialogContentText>
         <TextField
           autoFocus
@@ -53,7 +52,6 @@ export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
           type="text"
           fullWidth
           variant="standard"
-          defaultValue={user.firstName}
           onChange={(e) => {
             setValues({ ...values, firstName: e.target.value });
           }}
@@ -66,7 +64,6 @@ export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
           type="text"
           fullWidth
           variant="standard"
-          defaultValue={user.lastName}
           onChange={(e) => {
             setValues({ ...values, lastName: e.target.value });
           }}
@@ -79,7 +76,6 @@ export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
           type="text"
           fullWidth
           variant="standard"
-          defaultValue={user.userName}
           onChange={(e) => {
             setValues({ ...values, userName: e.target.value });
           }}
@@ -92,7 +88,6 @@ export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
           type="email"
           fullWidth
           variant="standard"
-          defaultValue={user.email}
           onChange={(e) => {
             setValues({ ...values, email: e.target.value });
           }}
@@ -105,7 +100,6 @@ export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
           type="tel"
           fullWidth
           variant="standard"
-          defaultValue={user.phoneNumber}
           onChange={(e) => {
             setValues({ ...values, phoneNumber: e.target.value });
           }}
@@ -118,39 +112,39 @@ export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
           type="text"
           fullWidth
           variant="standard"
-          defaultValue={user.address}
           onChange={(e) => {
             setValues({ ...values, address: e.target.value });
           }}
           sx={{ mb: 2 }}
         />
-        <DateTimePicker
+        <DatePicker
           autoFocus
           label="Doğum Tarihi"
+          sx={{ width: "100%", mb: 2 }}
           // @ts-ignore
-          defaultValue={dayjs(user.dateOfBirth)}
           onChange={(date: Date | null) => {
             setValues({ ...values, dateOfBirth: date ? date : new Date() });
           }}
-          sx={{ width: "100%", mb: 2 }}
         />
-        <DateTimePicker
+        <DatePicker
           autoFocus
           label="İşe Giriş Tarihi"
           // @ts-ignore
-          defaultValue={dayjs(user.hireDate)}
           onChange={(date: Date | null) => {
             setValues({ ...values, hireDate: date ? date : new Date() });
           }}
           sx={{ width: "100%" }}
         />
+        <Snackbar>
+            <Alert severity="success">Kullanıcı başarıyla oluşturuldu.</Alert>
+        </Snackbar>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} disabled={updateUser.isLoading}>
+        <Button onClick={handleClose} disabled={createUser.isLoading}>
           İptal
         </Button>
-        <Button onClick={handleUpdate} disabled={updateUser.isLoading}>
-          Güncelle
+        <Button onClick={handleCreate} disabled={createUser.isLoading}>
+          Oluştur
         </Button>
       </DialogActions>
     </Dialog>

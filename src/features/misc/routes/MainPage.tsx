@@ -8,7 +8,7 @@ import UserCard from "../components/UserCard";
 export function MainPage() {
   const user = useUser();
 
-  if (user.isLoading) {
+  if (user.isLoading || !user.data) {
     return <div>Loading...</div>;
   }
 
@@ -38,7 +38,7 @@ export function MainPage() {
       </Grid>
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          {user?.data?.roles.includes(ROLES.MANAGER) ? (
+          {user?.data?.roles && user?.data?.roles.includes(ROLES.MANAGER) ? (
             <TimeOffList />
           ) : (
             <UserTimeOffList />

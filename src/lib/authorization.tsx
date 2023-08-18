@@ -6,18 +6,20 @@ export enum ROLES {
   EMPLOYEE = "Employee",
 }
 
-
 export const useAuthorization = () => {
-  const user = useUser().data;
+  const user = useUser();
 
   if (!user) throw Error("User is not exist!");
 
   const checkAccess = useCallback(
     ({ allowedRoles }: { allowedRoles: string[] }) => {
-      if (allowedRoles.some((role) => user.roles.includes(role))) return true;
+      if (user.data?.roles) {
+        if (allowedRoles.some((role) => user.data?.roles.includes(role)))
+          return true;
+      }
       return false;
     },
-    [user.roles]
+    [user.data?.roles]
   );
 
   return { checkAccess };

@@ -12,11 +12,13 @@ import { formatDate } from "@utils/format";
 import { UpdateUser } from "./UpdateUser";
 import { useState } from "react";
 import { DeleteUser } from "./DeleteUser";
+import { CreateUser } from "./CreateUser";
 
 export function UserList() {
   const users = useUsers();
   const [openDeleteDialog, setOpenDeleteDialog] = useState<string | null>(null);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<string | null>(null);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
   if (users.isLoading) {
     return <div>Loading...</div>; // TODO loading component
@@ -25,7 +27,18 @@ export function UserList() {
   if (!users.data) return null;
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper elevation={3} sx={{ width: "100%", overflow: "hidden" }}>
+      <Button
+        variant="contained"
+        sx={{ mt: 2, ml: 2 }}
+        onClick={() => setOpenCreateDialog(true)}
+      >
+        Kullanıcı Ekle
+      </Button>
+      <CreateUser
+        open={openCreateDialog}
+        handleClose={() => setOpenCreateDialog(false)}
+      />
       <Table size="small">
         <TableHead>
           <TableRow>

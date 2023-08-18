@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { queryClient } from "../lib/react-query";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "@utils/theme";
+import "dayjs/locale/tr";
 
 const ErrorFallBack = () => {
   return (

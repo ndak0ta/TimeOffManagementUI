@@ -1,15 +1,16 @@
+import { Alert } from "@components/Alert";
 import { useLogin } from "@lib/auth";
 import {
-  Alert,
   Box,
   Button,
   CssBaseline,
   Grid,
   Link,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
-import { FormEvent, Fragment, useEffect, useState } from "react";
+import { FormEvent, Fragment, useState } from "react";
 
 type LoginValues = {
   username: string;
@@ -29,18 +30,34 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     password: "",
   });
   const [error, setError] = useState<any | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await login.mutateAsync(values).then(() => onSuccess());
+    await login.mutateAsync(values).catch((err) => {
+      if (err.response.status === 401) {
+        setError("Kullanıcı adı veya şifre hatalı");
+        setSnackbarOpen(true);
+        return;
+      }
+      setError(err.response.data.error);
+    });
+
+    if (login.isSuccess) {
+      onSuccess();
+    }
   };
 
-  useEffect(() => {
-    if (login.error) {
-      // @ts-ignore
-      setError(login.error.response.data.error || "Bir hata oluştu.");
+  const handleSnacbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
     }
-  }, [login.error]);
+
+    setSnackbarOpen(false);
+  };
 
   return (
     <Fragment>
@@ -102,11 +119,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               </Link>
             </Grid>
           </Grid>
-          {error && (
-            <Alert severity="error" sx={{ mt: 1 }}>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={handleSnacbarClose}
+          >
+            <Alert severity="error" onClose={handleSnacbarClose}>
               {error}
             </Alert>
-          )}
+          </Snackbar>
         </Box>
       </Box>
     </Fragment>
