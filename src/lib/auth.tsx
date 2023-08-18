@@ -1,14 +1,14 @@
-import { getUser } from "@/features/auth/api/getUser";
+import { getUser } from "@features/auth/api/getUser";
 import {
   LoginCredentialDTO,
   loginWithUsernameAndPassword,
-} from "@/features/auth/api/login";
+} from "@features/auth/api/login";
 import {
   RegisterCredentialDTO,
   registerWithUsernameAndPassword,
-} from "@/features/auth/api/register";
-import { AuthUser, UserResponse } from "@/features/auth/types";
-import { storage } from "@/utils/storage";
+} from "@features/auth/api/register";
+import { AuthUser, UserResponse } from "@features/auth/types";
+import { storage } from "@utils/storage";
 import { configureAuth } from "react-query-auth";
 
 function handleUserResponse(data: UserResponse) {

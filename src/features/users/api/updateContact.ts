@@ -1,6 +1,6 @@
-import { useUser } from "@/lib/auth";
-import axios from "@/lib/axios";
-import { MutationConfig } from "@/lib/react-query";
+import { useUser } from "@lib/auth";
+import axios from "@lib/axios";
+import { MutationConfig } from "@lib/react-query";
 import { useMutation } from "@tanstack/react-query";
 
 
@@ -12,7 +12,7 @@ export type UpdateUserContactDTO = {
 };
 
 export const updateUserContact = async ({ data }: UpdateUserContactDTO) => {
-    return axios.put("/user", data);
+    return axios.patch("/user/update-contact", data);
 }
 
 type UseUpdateUserContactOptions = {
@@ -25,6 +25,10 @@ export const useUpdateUserContact = ({ config }: UseUpdateUserContactOptions = {
     return useMutation({
         onSuccess: () => {
             user.refetch();
+        },
+        onError: (err, variables, context: any) => {
+            user.refetch();
+            console.log("Error updating user contact: ", err);
         },
         ...config,
         mutationFn: updateUserContact,

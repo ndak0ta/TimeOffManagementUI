@@ -1,6 +1,6 @@
-import axios from "@/lib/axios";
+import axios from "@lib/axios";
 import { TimeOff } from "../types";
-import { MutationConfig, queryClient } from "@/lib/react-query";
+import { MutationConfig, queryClient } from "@lib/react-query";
 import { useMutation } from "@tanstack/react-query"
 
 export type ApproveTimeOffDTO = {

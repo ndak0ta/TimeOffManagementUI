@@ -1,5 +1,5 @@
-import axios from "@/lib/axios";
-import { UserResponse } from "@/features/auth/types";
+import axios from "@lib/axios";
+import { UserResponse } from "@features/auth/types";
 
 
 export type RegisterCredentialDTO = {

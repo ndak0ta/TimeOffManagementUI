@@ -1,4 +1,4 @@
-import { Authorization, ROLES } from "@/lib/authorization";
+import { Authorization, ROLES } from "@lib/authorization";
 import { UserList } from "../components/UserList";
 
 export function Users() {

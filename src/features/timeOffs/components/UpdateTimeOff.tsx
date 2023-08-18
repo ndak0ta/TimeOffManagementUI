@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import { UpdateTimeOffDTO, useUpdateTimeOff } from "../api/updateTimeOff";
-import { Authorization, ROLES } from "@/lib/authorization";
+import { Authorization, ROLES } from "@lib/authorization";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
 import dayjs from "dayjs";

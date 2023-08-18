@@ -1,7 +1,7 @@
-import TimeOffList from "@/features/timeOffs/components/TimeOffList";
-import UserTimeOffList from "@/features/timeOffs/components/UserTimeOffList";
-import { useUser } from "@/lib/auth";
-import { ROLES } from "@/lib/authorization";
+import TimeOffList from "@features/timeOffs/components/TimeOffList";
+import UserTimeOffList from "@features/timeOffs/components/UserTimeOffList";
+import { useUser } from "@lib/auth";
+import { ROLES } from "@lib/authorization";
 import { Grid, Paper } from "@mui/material";
 import UserCard from "../components/UserCard";
 
@@ -23,7 +23,7 @@ export function MainPage() {
             height: 240,
           }}
         >
-          <UserCard />
+          <UserCard user={user.data} />
         </Paper>
       </Grid>
       <Grid item xs={12} md={8} lg={9}>

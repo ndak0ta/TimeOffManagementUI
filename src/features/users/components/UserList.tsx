@@ -1,4 +1,5 @@
 import {
+  Button,
   Paper,
   Table,
   TableBody,
@@ -7,15 +8,21 @@ import {
   TableRow,
 } from "@mui/material";
 import { useUsers } from "../api/getUsers";
+import { formatDate } from "@utils/format";
+import { UpdateUser } from "./UpdateUser";
+import { useState } from "react";
+import { DeleteUser } from "./DeleteUser";
 
 export function UserList() {
-  const usersQuery = useUsers();
+  const users = useUsers();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<string | null>(null);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState<string | null>(null);
 
-  if (usersQuery.isLoading) {
+  if (users.isLoading) {
     return <div>Loading...</div>; // TODO loading component
   }
 
-  if (!usersQuery.data) return null;
+  if (!users.data) return null;
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -32,21 +39,48 @@ export function UserList() {
             <TableCell>Yıllık İzin</TableCell>
             <TableCell>Kalan İzin</TableCell>
             <TableCell>Rol</TableCell>
+            <TableCell align="right">İşlemler</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {usersQuery.data.map((user) => (
+          {users.data.map((user) => (
             <TableRow key={user.id}>
-              <TableCell>{user.firstname}</TableCell>
-              <TableCell>{user.lastname}</TableCell>
+              <TableCell>{user.firstName}</TableCell>
+              <TableCell>{user.lastName}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>{user.address}</TableCell>
-              <TableCell>{user.dateOfBirth}</TableCell>
-              <TableCell>{user.hireDate}</TableCell>
+              <TableCell>{formatDate(user.dateOfBirth)}</TableCell>
+              <TableCell>{formatDate(user.hireDate)}</TableCell>
               <TableCell>{user.annualTimeOffs}</TableCell>
               <TableCell>{user.remainingAnnualTimeOffs}</TableCell>
               <TableCell>{user.roles}</TableCell>
+              <TableCell align="right">
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={() => setOpenUpdateDialog(user.id)}
+                >
+                  Düzenle
+                </Button>
+                <Button
+                  variant="text"
+                  color="error"
+                  onClick={() => setOpenDeleteDialog(user.id)}
+                >
+                  Sil
+                </Button>
+                <UpdateUser
+                  user={user}
+                  open={openUpdateDialog === user.id}
+                  handleClose={() => setOpenUpdateDialog(null)}
+                />
+                <DeleteUser
+                  id={user.id}
+                  open={openDeleteDialog === user.id}
+                  handleClose={() => setOpenDeleteDialog(null)}
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

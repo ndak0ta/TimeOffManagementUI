@@ -1,5 +1,5 @@
-import axios from "@/lib/axios";
-import { ExtractFnReturnType } from "@/lib/react-query";
+import axios from "@lib/axios";
+import { ExtractFnReturnType } from "@lib/react-query";
 import { useQuery } from "@tanstack/react-query";
 
 export const getTimeOff = async (id: number) => {

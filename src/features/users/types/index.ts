@@ -1,12 +1,13 @@
 export type User = {
     id: string;
-    firstname: string;
-    lastname: string;
+    userName: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phoneNumber: string;
     address: string;
-    dateOfBirth: string;
-    hireDate: string;
+    dateOfBirth: Date;
+    hireDate: Date;
     annualTimeOffs: number;
     remainingAnnualTimeOffs: number;
     roles: string[];

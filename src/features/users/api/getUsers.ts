@@ -1,10 +1,11 @@
-import axios from "@/lib/axios";
+import axios from "@lib/axios";
 import { User } from "../types";
-import { ExtractFnReturnType, QueryConfig } from "@/lib/react-query";
+import { ExtractFnReturnType, QueryConfig } from "@lib/react-query";
 import { useQuery } from "@tanstack/react-query";
 
-export const getUsers = (): Promise<User[]> => {
-    return axios.get("/user/all");
+export const getUsers = async (): Promise<User[]> => {
+    const response = await axios.get("/user/all");
+    return response.data;
 }
 
 type QueryFnType = typeof getUsers;

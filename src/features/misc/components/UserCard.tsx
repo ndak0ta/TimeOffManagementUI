@@ -1,17 +1,16 @@
-import CreateTimeOff from "@/features/timeOffs/components/CreateTimeOff";
-import { useUser } from "@/lib/auth";
+import { AuthUser } from "@features/auth";
+import CreateTimeOff from "@features/timeOffs/components/CreateTimeOff";
 import { Button, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 
-export default function UserCard() {
-  const user = useUser().data || {
-    firstName: "",
-    lastName: "",
-    roles: [""],
-    annualTimeOffs: 0,
-    remainingAnnualTimeOffs: 0,
-  };
+type UserCardProps = {
+  user?: AuthUser | null;
+};
+
+export default function UserCard({ user }: UserCardProps) {
   const [open, setOpen] = useState(false);
+
+  if (!user) return null;
 
   return (
     <Fragment>

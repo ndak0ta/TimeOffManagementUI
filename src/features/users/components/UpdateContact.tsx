@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useUser } from "@/lib/auth";
+import { useState } from "react";
 import { useUpdateUserContact } from "../api/updateContact";
 import {
   Button,
@@ -10,19 +9,20 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import { AuthUser } from "@features/auth";
 
 type UpdateProfileProps = {
   open: boolean;
+  user: AuthUser;
   handleClose: () => void;
 };
 
 // TODO başarılı ve başarırısız durumları için alert ekle
-export function UpdateProfile({ open, handleClose }: UpdateProfileProps) {
+export function UpdateContact({ open, user, handleClose }: UpdateProfileProps) {
   const [values, setValues] = useState({
-    email: "",
-    phoneNumber: "",
+    email: user.email,
+    phoneNumber: user.phoneNumber,
   });
-  const user = useUser();
   const updateUserMutation = useUpdateUserContact();
 
   const handleUpdate = async () => {
@@ -32,15 +32,6 @@ export function UpdateProfile({ open, handleClose }: UpdateProfileProps) {
       }
     });
   };
-
-  useEffect(() => {
-    if (user.isFetched) {
-      setValues({
-        email: user.data?.email || "",
-        phoneNumber: user.data?.phoneNumber || "",
-      });
-    }
-  }, [user.data?.email, user.data?.phoneNumber, user.isFetched]);
 
   return (
     <Dialog open={open} onClose={handleClose}>

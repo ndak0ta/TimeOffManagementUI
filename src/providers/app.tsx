@@ -5,7 +5,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ErrorBoundary } from "react-error-boundary";
 import { BrowserRouter } from "react-router-dom";
 import { queryClient } from "../lib/react-query";
-
+import { ThemeProvider } from "@mui/material";
+import { theme } from "@utils/theme";
 
 const ErrorFallBack = () => {
   return (
@@ -23,12 +24,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <Suspense>
       <ErrorBoundary FallbackComponent={ErrorFallBack}>
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">
-          <QueryClientProvider client={queryClient}>
-            {/* TODO Daha sonra componentler ekle */}
-            <BrowserRouter>{children}</BrowserRouter>
-          </QueryClientProvider>
-        </LocalizationProvider>
+        <QueryClientProvider client={queryClient}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">
+            <ThemeProvider theme={theme}>
+              <BrowserRouter>{children}</BrowserRouter>
+            </ThemeProvider>
+          </LocalizationProvider>
+        </QueryClientProvider>
       </ErrorBoundary>
     </Suspense>
   );

@@ -1,4 +1,4 @@
-import { Authorization, ROLES } from "@/lib/authorization";
+import { Authorization, ROLES } from "@lib/authorization";
 import { useCreateTimeOff } from "../api/createTimeOff";
 import { useState } from "react";
 import dayjs from "dayjs";

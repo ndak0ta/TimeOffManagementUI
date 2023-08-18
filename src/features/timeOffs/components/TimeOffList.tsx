@@ -5,9 +5,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { formatDate, formatDateWithDay } from "@/utils/format";
+import { formatDate, formatDateWithDay } from "@utils/format";
 import { useTimeOffs } from "../api/getTimeOffs";
-import { Authorization, ROLES } from "@/lib/authorization";
+import { Authorization, ROLES } from "@lib/authorization";
 import ApproveTimeOff from "./ApproveTimeOff";
 import { ApproveCancelTimeOff } from "./ApproveCancelTimeOff";
 

@@ -1,5 +1,6 @@
-import { useLogin } from "@/lib/auth";
+import { useLogin } from "@lib/auth";
 import {
+  Alert,
   Box,
   Button,
   CssBaseline,
@@ -8,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { FormEvent, Fragment, useState } from "react";
+import { FormEvent, Fragment, useEffect, useState } from "react";
 
 type LoginValues = {
   username: string;
@@ -27,13 +28,19 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     username: "",
     password: "",
   });
+  const [error, setError] = useState<any | null>(null);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await login.mutateAsync(values).then(() => {
-      onSuccess();
-    });
+    await login.mutateAsync(values).then(() => onSuccess());
   };
+
+  useEffect(() => {
+    if (login.error) {
+      // @ts-ignore
+      setError(login.error.response.data.error || "Bir hata oluştu.");
+    }
+  }, [login.error]);
 
   return (
     <Fragment>
@@ -49,7 +56,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <Typography component="h1" variant="h5">
           Giriş Yap
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          onError={(err) => setError(err)}
+          sx={{ mt: 1 }}
+        >
           <TextField
             margin="normal"
             required
@@ -90,6 +102,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               </Link>
             </Grid>
           </Grid>
+          {error && (
+            <Alert severity="error" sx={{ mt: 1 }}>
+              {error}
+            </Alert>
+          )}
         </Box>
       </Box>
     </Fragment>

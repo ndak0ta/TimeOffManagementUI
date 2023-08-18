@@ -1,22 +1,29 @@
-import DashboardLayout from "@/components/DashboardLayout";
-import { lazyImport } from "@/utils/lazyImport";
+import DashboardLayout from "@components/DashboardLayout";
+import { UserList } from "@features/users/components/UserList";
+import { AuthLoader } from "@lib/auth";
+import { lazyImport } from "@utils/lazyImport";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
-const { MainPage } = lazyImport(() => import("@/features/misc"), "MainPage");
+const { MainPage } = lazyImport(() => import("@features/misc"), "MainPage");
 const { UserProfile } = lazyImport(
-  () => import("@/features/users"),
+  () => import("@features/users"),
   "UserProfile"
 );
 
 // TODO loading component
 const App = () => {
   return (
-    <DashboardLayout>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Outlet />
-      </Suspense>
-    </DashboardLayout>
+    <AuthLoader
+      renderLoading={() => <div>Loading...</div>}
+      renderUnauthenticated={() => <div>Yetkisiz !şlem!</div>}
+    >
+      <DashboardLayout>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
+      </DashboardLayout>
+    </AuthLoader>
   );
 };
 
@@ -33,6 +40,10 @@ export const protectedRoutes = [
         path: "profile",
         element: <UserProfile />,
       },
+      {
+        path: "users",
+        element: <UserList />,
+      }
     ],
   },
 ];

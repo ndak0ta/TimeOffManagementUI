@@ -1,6 +1,6 @@
-import axios from "@/lib/axios";
+import axios from "@lib/axios";
 import { TimeOff } from "../types";
-import { ExtractFnReturnType, QueryConfig } from "@/lib/react-query";
+import { ExtractFnReturnType, QueryConfig } from "@lib/react-query";
 import { useQuery } from "@tanstack/react-query";
 
 export const getUserTimeOffs = async (): Promise<TimeOff[]> => {

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useUser } from "@/lib/auth";
+import { useUser } from "@lib/auth";
 import { useDeleteUser } from "../api/deleteUser";
 import {
   Button,
@@ -14,24 +13,19 @@ import { useTheme } from "@emotion/react";
 
 type DeleteuserProps = {
   id: string;
+  open: boolean;
+  handleClose: () => void;
 };
 // TODO authentication için geri dön
-export const DeleteUser = ({ id }: DeleteuserProps) => {
-  const [open, setOpen] = useState(false);
+export const DeleteUser = ({ id, open, handleClose }: DeleteuserProps) => {
   const user = useUser();
   const deleteUserMutation = useDeleteUser();
   const theme = useTheme();
-  // TODO: sonra kontrol et
   // @ts-ignore
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleDelete = () => {
     deleteUserMutation.mutate({ id });
-    setOpen(false);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   if (user?.data?.id === id) return null;

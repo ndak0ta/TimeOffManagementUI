@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useUser } from "@/lib/auth";
-import { formatDate } from "@/utils/format";
+import { useUser } from "@lib/auth";
+import { formatDate } from "@utils/format";
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
-import { UpdateProfile } from "../components/UpdateProfile";
+import { UpdateContact } from "../components/UpdateContact";
 
 export function UserProfile() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const user = useUser().data || {
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -16,7 +17,7 @@ export function UserProfile() {
     phoneNumber: "",
     annualTimeOffs: 0,
     remainingAnnualTimeOffs: 0,
-    roles: "",
+    roles: [""],
   };
 
   const handleUpdateDialogOpen = () => {
@@ -115,14 +116,15 @@ export function UserProfile() {
           value={user.roles}
           sx={{ mb: 2 }}
         />
+        <Button variant="contained" onClick={handleUpdateDialogOpen}>
+          İletişim bilgilerini güncelle
+        </Button>
+        <UpdateContact
+          open={openUpdateDialog}
+          user={user}
+          handleClose={handleUpdateDialogClose}
+        />
       </Box>
-      <Button variant="contained" onClick={handleUpdateDialogOpen}>
-        İletişim bilgilerini güncelle
-      </Button>
-      <UpdateProfile
-        open={openUpdateDialog}
-        handleClose={handleUpdateDialogClose}
-      />
       <Typography>
         Bu bilgilerde bir hata olduğunu düşünüyorsanız amirinize bildiriniz
       </Typography>

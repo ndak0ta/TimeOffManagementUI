@@ -17,6 +17,7 @@
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "axios": "^1.4.0",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -28,7 +29,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "GENERATE_SOURCEMAP=false craco start",
+    "start": "cross-env craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject"
@@ -52,7 +53,7 @@
     ]
   },
   "devDependencies": {
-    "@tanstack/react-query": "^4.32.6",
-    "@babel/plugin-proposal-private-property-in-object": "^7.16.7"
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@tanstack/react-query": "^4.32.6"
   }
 }

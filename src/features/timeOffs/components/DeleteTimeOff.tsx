@@ -1,4 +1,4 @@
-import { Authorization, ROLES } from "@/lib/authorization";
+import { Authorization, ROLES } from "@lib/authorization";
 import { useDeleteTimeOff } from "../api/deleteTimeOff";
 import {
   Button,

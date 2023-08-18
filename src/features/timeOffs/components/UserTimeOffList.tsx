@@ -7,10 +7,10 @@ import {
   TableRow,
 } from "@mui/material";
 import { useUserTimeOffs } from "../api/getUserTimeOffs";
-import { formatDate, formatDateWithDay } from "@/utils/format";
+import { formatDate, formatDateWithDay } from "@utils/format";
 import { Fragment, useState } from "react";
 import DeleteTimeOff from "./DeleteTimeOff";
-import { Authorization, ROLES } from "@/lib/authorization";
+import { Authorization, ROLES } from "@lib/authorization";
 import CancelTimeOff from "./CancelTimeOff";
 import UpdateTimeOff from "./UpdateTimeOff";
 import DrawCancelTimeOff from "./DrawCancelTimeOff";

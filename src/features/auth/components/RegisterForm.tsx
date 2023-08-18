@@ -1,4 +1,4 @@
-import { useRegister } from "@/lib/auth";
+import { useRegister } from "@lib/auth";
 import { Button } from "@mui/base";
 import {
   Box,
