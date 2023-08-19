@@ -16,7 +16,7 @@ type CreateUserDTO = {
 };
 
 export const createUser = async (dto: CreateUserDTO): Promise<User> => {
-    const response = await axios.post('/users', dto);
+    const response = await axios.post('/user', dto);
     return response.data;
 }
 
