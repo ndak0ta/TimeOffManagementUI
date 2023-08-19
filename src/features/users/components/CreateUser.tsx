@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, useState } from "react";
 import { useCreateUser } from "../api/createUser";
 import {
   Button,
@@ -7,18 +7,25 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Snackbar,
   TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { Alert } from "@components/Alert";
 
 type CreateUserProps = {
   open: boolean;
   handleClose: () => void;
+  setSnackbarState: Dispatch<{
+    open: boolean;
+    severity: "success" | "error" | "warning" | "info" | undefined;
+    message: string;
+  }>;
 };
 
-export const CreateUser = ({ open, handleClose }: CreateUserProps) => {
+export const CreateUser = ({
+  open,
+  handleClose,
+  setSnackbarState,
+}: CreateUserProps) => {
   const createUser = useCreateUser();
   const [values, setValues] = useState({
     id: "",
@@ -33,8 +40,24 @@ export const CreateUser = ({ open, handleClose }: CreateUserProps) => {
   });
 
   const handleCreate = async () => {
-    await createUser.mutateAsync(values);
-    handleClose();
+    await createUser
+      .mutateAsync(values)
+      .catch((err) =>
+        setSnackbarState({
+          open: true,
+          severity: "error",
+          message: err.response.data.error,
+        })
+      )
+      .then(() => {
+        if (createUser.isSuccess) {
+          setSnackbarState({
+            open: true,
+            severity: "success",
+            message: "Kullanıcı başarıyla oluşturuldu",
+          });
+        }
+      });
   };
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -135,9 +158,6 @@ export const CreateUser = ({ open, handleClose }: CreateUserProps) => {
           }}
           sx={{ width: "100%" }}
         />
-        <Snackbar>
-            <Alert severity="success">Kullanıcı başarıyla oluşturuldu.</Alert>
-        </Snackbar>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} disabled={createUser.isLoading}>

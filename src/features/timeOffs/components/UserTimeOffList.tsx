@@ -16,7 +16,13 @@ import UpdateTimeOff from "./UpdateTimeOff";
 import DrawCancelTimeOff from "./DrawCancelTimeOff";
 
 export default function UserTimeOffList() {
-  const timeOffs = useUserTimeOffs();
+  const timeOffs = useUserTimeOffs({
+    config: {
+      refetchIntervalInBackground: true,
+      refetchInterval: 1000 * 60 * 60,
+      refetchOnWindowFocus: true,
+    },
+  });
   const [openDeleteDialog, setOpenDeleteDialog] = useState<Number | null>(null);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<Number | null>(null);
 

@@ -1,6 +1,7 @@
 import {
   Button,
   Paper,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -13,12 +14,28 @@ import { UpdateUser } from "./UpdateUser";
 import { useState } from "react";
 import { DeleteUser } from "./DeleteUser";
 import { CreateUser } from "./CreateUser";
+import { Alert } from "@components/Alert";
 
 export function UserList() {
-  const users = useUsers();
+  const users = useUsers({
+    config: {
+      refetchIntervalInBackground: true,
+      refetchInterval: 1000 * 60 * 60,
+      refetchOnWindowFocus: true,
+    },
+  });
   const [openDeleteDialog, setOpenDeleteDialog] = useState<string | null>(null);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<string | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [snackbarState, setSnackbarState] = useState<{
+    open: boolean;
+    severity: "success" | "error" | "warning" | "info" | undefined;
+    message: string;
+  }>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
 
   if (users.isLoading) {
     return <div>Loading...</div>; // TODO loading component
@@ -38,6 +55,7 @@ export function UserList() {
       <CreateUser
         open={openCreateDialog}
         handleClose={() => setOpenCreateDialog(false)}
+        setSnackbarState={setSnackbarState}
       />
       <Table size="small">
         <TableHead>
@@ -98,6 +116,29 @@ export function UserList() {
           ))}
         </TableBody>
       </Table>
+      <Snackbar
+        open={snackbarState.open}
+        autoHideDuration={6000}
+        onClose={() => {
+          setSnackbarState({
+            ...snackbarState,
+            open: false,
+          });
+        }}
+      >
+        <Alert
+          severity={snackbarState.severity}
+          onClose={() => {
+            setSnackbarState({
+              ...snackbarState,
+              open: false,
+            });
+            setOpenCreateDialog(false);
+          }}
+        >
+          {snackbarState.message}
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 }

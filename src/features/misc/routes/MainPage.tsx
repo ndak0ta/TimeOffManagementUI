@@ -6,7 +6,9 @@ import { Grid, Paper } from "@mui/material";
 import UserCard from "../components/UserCard";
 
 export function MainPage() {
-  const user = useUser();
+  const user = useUser({
+    retryOnMount: true,
+  });
 
   if (user.isLoading || !user.data) {
     return <div>Loading...</div>;

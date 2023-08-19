@@ -11,7 +11,7 @@ export const getUserTimeOffs = async (): Promise<TimeOff[]> => {
 type QueryFnType = typeof getUserTimeOffs;
 
 type UseTimeOffOptions = {
-    config?: QueryConfig<typeof getUserTimeOffs>;
+    config?: QueryConfig<QueryFnType>;
 }
 
 export const useUserTimeOffs = ({ config }: UseTimeOffOptions = {}) => {

@@ -1,5 +1,5 @@
 import axios from "@lib/axios"
-import { ExtractFnReturnType } from "@lib/react-query";
+import { ExtractFnReturnType, QueryConfig } from "@lib/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { TimeOff } from "../types";
 
@@ -11,7 +11,7 @@ export const getTimeOff = async (): Promise<TimeOff[]> => {
 type QueryFnType = typeof getTimeOff;
 
 type UseTimeOffsOptions = {
-    config?: any;
+    config?: QueryConfig<QueryFnType>;
 }
 
 export const useTimeOffs = ({ config }: UseTimeOffsOptions = {}) => {

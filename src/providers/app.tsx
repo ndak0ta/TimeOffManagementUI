@@ -8,6 +8,8 @@ import { queryClient } from "../lib/react-query";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "@utils/theme";
 import "dayjs/locale/tr";
+import { NODE_ENV } from "@config/constants";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const ErrorFallBack = () => {
   return (
@@ -28,6 +30,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         <QueryClientProvider client={queryClient}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">
             <ThemeProvider theme={theme}>
+              {NODE_ENV !== "production" ? (
+                <ReactQueryDevtools initialIsOpen={false} />
+              ) : null}
               <BrowserRouter>{children}</BrowserRouter>
             </ThemeProvider>
           </LocalizationProvider>

@@ -12,7 +12,13 @@ import ApproveTimeOff from "./ApproveTimeOff";
 import { ApproveCancelTimeOff } from "./ApproveCancelTimeOff";
 
 export default function TimeOffList() {
-  const timeOffs = useTimeOffs();
+  const timeOffs = useTimeOffs({
+    config: {
+      refetchIntervalInBackground: true,
+      refetchInterval: 1000 * 60 * 60,
+      refetchOnWindowFocus: true,
+    },
+  });
 
   if (timeOffs.isLoading) {
     return <div>Loading...</div>; // TODO: replace with loading component
