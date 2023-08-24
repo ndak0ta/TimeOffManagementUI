@@ -41,7 +41,7 @@ export const useUpdateTimeOff = ({ config }: UseUpdateTimeOffOptions = {}) => {
             // TODO alert eklenebilir
         },
         onSuccess: (data) => {
-            queryClient.refetchQueries(['timeOffs', data.id]);
+            queryClient.invalidateQueries(['timeOffs', data.id]);
 
             // TODO bildirim eklenebilir
         },

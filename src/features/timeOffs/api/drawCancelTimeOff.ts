@@ -32,7 +32,7 @@ export const useDrawCancelTimeOff = ({ config }: UseDrawCancelTimeOff = {}) => {
             queryClient.setQueryData(["timeOffs", drawCancelTimeOff.id], context.previousTimeOff);
         },
         onSuccess: () => {
-            queryClient.refetchQueries(["timeOffs"]); // TODO - Refetch only the timeOff that was updated
+            queryClient.invalidateQueries(["timeOffs"]); // TODO - Refetch only the timeOff that was updated
         },
         ...config,
         mutationFn: drawCancelTimeOff,

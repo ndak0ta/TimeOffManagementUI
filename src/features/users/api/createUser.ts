@@ -5,14 +5,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useUsers } from "./getUsers";
 
 type CreateUserDTO = {
-    userName: string;
-    email: string;
     firstName: string;
     lastName: string;
-    phoneNumber: string;
-    address: string;
     dateOfBirth: Date;
     hireDate: Date;
+    phoneNumber: string;
+    email: string;
+    address: string;
 };
 
 export const createUser = async (dto: CreateUserDTO): Promise<User> => {

@@ -4,14 +4,12 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgrPlugin from 'vite-plugin-svgr';
 import checker from 'vite-plugin-checker';
 import eslint from "vite-plugin-eslint";
-import { ErrorOverlay } from 'vite-plugin-error-overlay';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     eslint(),
-    ErrorOverlay(),
     checker({
       overlay: { initialIsOpen: false },
       typescript: true,
@@ -24,9 +22,5 @@ export default defineConfig({
   ],
   server: {
     port: 3000,
-    proxy: {
-      '/api-server/': '...',
-      '/authorization/': '...',
-    },
   },
 });

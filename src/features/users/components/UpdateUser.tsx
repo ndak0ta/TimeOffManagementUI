@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useUpdateUser } from "../api/updateUser";
-import { useState } from "react";
+import { Dispatch, useState } from "react";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { User } from "../types";
@@ -17,9 +17,19 @@ type UpdateUserProps = {
   open: boolean;
   user: User;
   handleClose: () => void;
+  setSnackbarState: Dispatch<{
+    open: boolean;
+    severity: "success" | "error" | "warning" | "info" | undefined;
+    message: string;
+  }>;
 };
 
-export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
+export const UpdateUser = ({
+  open,
+  user,
+  handleClose,
+  setSnackbarState,
+}: UpdateUserProps) => {
   const updateUser = useUpdateUser();
   const [values, setValues] = useState({
     id: user.id,
@@ -34,8 +44,25 @@ export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
   });
 
   const handleUpdate = async () => {
-    await updateUser.mutateAsync(values);
-    handleClose();
+    await updateUser
+      .mutateAsync(values)
+      .catch((err) => {
+        setSnackbarState({
+          open: true,
+          severity: "error",
+          message: err.response.data.error,
+        });
+      })
+      .finally(() => {
+        if (updateUser.isSuccess) {
+          setSnackbarState({
+            open: true,
+            severity: "success",
+            message: "Kullanıcı başarıyla güncellendi",
+          });
+          handleClose();
+        }
+      });
   };
 
   return (

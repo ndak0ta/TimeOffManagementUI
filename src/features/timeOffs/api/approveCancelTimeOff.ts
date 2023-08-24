@@ -39,7 +39,7 @@ export const useApproveCancelTimeOff = ({ config }: UseApproveCancelTimeOffOptio
             // TODO alert eklenebilir
         },
         onSuccess: (data) => {
-            queryClient.refetchQueries(['timeOffs']); // TODO timeOffs yerine sadece tek bir timeOff refetch edilebilir
+            queryClient.invalidateQueries(['timeOffs']); // TODO timeOffs yerine sadece tek bir timeOff refetch edilebilir
 
             // TODO bildirim eklenebilir
         },

@@ -44,7 +44,7 @@ export const useCreateTimeOff = ({ config }: UseCreateTimeOffOptions = {}) => {
             // TODO alert eklenebilir
         },
         onSuccess: () => {
-            queryClient.refetchQueries(['timeOffs']);
+            queryClient.invalidateQueries(['timeOffs']);
             // TODO bildirim eklenebilir
         },
         ...config,

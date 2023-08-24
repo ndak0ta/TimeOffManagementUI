@@ -1,4 +1,3 @@
-import { useUser } from "@lib/auth";
 import { useDeleteUser } from "../api/deleteUser";
 import {
   Button,
@@ -15,20 +14,41 @@ type DeleteuserProps = {
   id: string;
   open: boolean;
   handleClose: () => void;
+  setSnackbarState: any;
 };
 // TODO authentication için geri dön
-export const DeleteUser = ({ id, open, handleClose }: DeleteuserProps) => {
-  const user = useUser();
+export const DeleteUser = ({
+  id,
+  open,
+  handleClose,
+  setSnackbarState,
+}: DeleteuserProps) => {
   const deleteUserMutation = useDeleteUser();
   const theme = useTheme();
   // @ts-ignore
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const handleDelete = () => {
-    deleteUserMutation.mutate({ id });
+  const handleDelete = async () => {
+    await deleteUserMutation
+      .mutateAsync({ id })
+      .catch((err) => {
+        setSnackbarState({
+          open: true,
+          severity: "error",
+          message: err.response.data.error,
+        });
+      })
+      .finally(() => {
+        if (deleteUserMutation.isSuccess) {
+          setSnackbarState({
+            open: true,
+            severity: "success",
+            message: "Kullanıcı başarıyla silindi",
+          });
+          handleClose();
+        }
+      });
   };
-
-  if (user?.data?.id === id) return null;
 
   return (
     <Dialog

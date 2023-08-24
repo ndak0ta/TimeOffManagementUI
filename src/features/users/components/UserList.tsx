@@ -1,5 +1,8 @@
+import { useState } from "react";
 import {
   Button,
+  Menu,
+  MenuItem,
   Paper,
   Snackbar,
   Table,
@@ -11,10 +14,10 @@ import {
 import { useUsers } from "../api/getUsers";
 import { formatDate } from "@utils/format";
 import { UpdateUser } from "./UpdateUser";
-import { useState } from "react";
 import { DeleteUser } from "./DeleteUser";
 import { CreateUser } from "./CreateUser";
 import { Alert } from "@components/Alert";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 export function UserList() {
   const users = useUsers({
@@ -27,6 +30,8 @@ export function UserList() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState<string | null>(null);
   const [openUpdateDialog, setOpenUpdateDialog] = useState<string | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
   const [snackbarState, setSnackbarState] = useState<{
     open: boolean;
     severity: "success" | "error" | "warning" | "info" | undefined;
@@ -44,10 +49,10 @@ export function UserList() {
   if (!users.data) return null;
 
   return (
-    <Paper elevation={3} sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <Button
         variant="contained"
-        sx={{ mt: 2, ml: 2 }}
+        sx={{ m: 2 }}
         onClick={() => setOpenCreateDialog(true)}
       >
         Kullanıcı Ekle
@@ -70,7 +75,7 @@ export function UserList() {
             <TableCell>Yıllık İzin</TableCell>
             <TableCell>Kalan İzin</TableCell>
             <TableCell>Rol</TableCell>
-            <TableCell align="right">İşlemler</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -86,30 +91,55 @@ export function UserList() {
               <TableCell>{user.annualTimeOffs}</TableCell>
               <TableCell>{user.remainingAnnualTimeOffs}</TableCell>
               <TableCell>{user.roles}</TableCell>
-              <TableCell align="right">
+              <TableCell>
                 <Button
-                  variant="text"
+                  id="basic-button"
                   color="primary"
-                  onClick={() => setOpenUpdateDialog(user.id)}
+                  aria-controls={openMenu ? "user-settings" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openMenu ? "true" : undefined}
+                  onClick={(e) => setAnchorEl(e.currentTarget)}
                 >
-                  Düzenle
+                  <MoreHorizIcon />
                 </Button>
-                <Button
-                  variant="text"
-                  color="error"
-                  onClick={() => setOpenDeleteDialog(user.id)}
+                <Menu
+                  id="user-settings"
+                  anchorEl={anchorEl}
+                  open={openMenu}
+                  onClose={() => setAnchorEl(null)}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
                 >
-                  Sil
-                </Button>
+                  <MenuItem
+                    onClick={() => {
+                      setOpenUpdateDialog(user.id);
+                      setAnchorEl(null);
+                    }}
+                  >
+                    Düzenle
+                  </MenuItem>
+                  <MenuItem
+                    sx={{ color: "error.main" }}
+                    onClick={() => {
+                      setOpenDeleteDialog(user.id);
+                      setAnchorEl(null);
+                    }}
+                  >
+                    Sil
+                  </MenuItem>
+                </Menu>
                 <UpdateUser
                   user={user}
                   open={openUpdateDialog === user.id}
                   handleClose={() => setOpenUpdateDialog(null)}
+                  setSnackbarState={setSnackbarState}
                 />
                 <DeleteUser
                   id={user.id}
                   open={openDeleteDialog === user.id}
                   handleClose={() => setOpenDeleteDialog(null)}
+                  setSnackbarState={setSnackbarState}
                 />
               </TableCell>
             </TableRow>
@@ -118,7 +148,7 @@ export function UserList() {
       </Table>
       <Snackbar
         open={snackbarState.open}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={() => {
           setSnackbarState({
             ...snackbarState,
@@ -133,7 +163,6 @@ export function UserList() {
               ...snackbarState,
               open: false,
             });
-            setOpenCreateDialog(false);
           }}
         >
           {snackbarState.message}

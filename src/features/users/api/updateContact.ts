@@ -28,7 +28,6 @@ export const useUpdateUserContact = ({ config }: UseUpdateUserContactOptions = {
         },
         onError: (err, variables, context: any) => {
             user.refetch();
-            console.log("Error updating user contact: ", err);
         },
         ...config,
         mutationFn: updateUserContact,

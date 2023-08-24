@@ -29,7 +29,6 @@ export const CreateUser = ({
   const createUser = useCreateUser();
   const [values, setValues] = useState({
     id: "",
-    userName: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -49,23 +48,26 @@ export const CreateUser = ({
           message: err.response.data.error,
         })
       )
-      .then(() => {
+      .finally(() => {
         if (createUser.isSuccess) {
           setSnackbarState({
             open: true,
             severity: "success",
             message: "Kullanıcı başarıyla oluşturuldu",
           });
+
+          handleClose();
         }
       });
   };
+
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Kullanıcıyı oluştur</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Kullanıcıyı oluşturmak üzeresiniz. Kullanıcı şifresi rastgele
-          oluşturulup mail olarak iletilecektir.
+          Kullanıcı adı ve şifresi otomatik oluşturulup mail olarak
+          iletilecektir.
         </DialogContentText>
         <TextField
           autoFocus
@@ -89,18 +91,6 @@ export const CreateUser = ({
           variant="standard"
           onChange={(e) => {
             setValues({ ...values, lastName: e.target.value });
-          }}
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="username"
-          label="Kullanıcı Adı"
-          type="text"
-          fullWidth
-          variant="standard"
-          onChange={(e) => {
-            setValues({ ...values, userName: e.target.value });
           }}
         />
         <TextField

@@ -9,7 +9,9 @@ export function UserProfile() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openChangePasswordDialog, setOpenChangePasswordDialog] =
     useState(false);
-  const user = useUser().data || {
+  const user = useUser({
+    refetchOnMount: false,
+  }).data || {
     id: "",
     firstName: "",
     lastName: "",
