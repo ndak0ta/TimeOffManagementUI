@@ -9,12 +9,17 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
+import { Dispatch } from "react";
 
 type DeleteuserProps = {
   id: string;
   open: boolean;
   handleClose: () => void;
-  setSnackbarState: any;
+  setSnackbarState: Dispatch<{
+    open: boolean;
+    severity: "success" | "error" | "warning" | "info" | undefined;
+    message: string;
+  }>;
 };
 // TODO authentication için geri dön
 export const DeleteUser = ({
@@ -45,6 +50,7 @@ export const DeleteUser = ({
             severity: "success",
             message: "Kullanıcı başarıyla silindi",
           });
+
           handleClose();
         }
       });

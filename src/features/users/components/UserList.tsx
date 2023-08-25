@@ -1,8 +1,6 @@
 import { useState } from "react";
 import {
   Button,
-  Menu,
-  MenuItem,
   Paper,
   Snackbar,
   Table,
@@ -12,12 +10,9 @@ import {
   TableRow,
 } from "@mui/material";
 import { useUsers } from "../api/getUsers";
-import { formatDate } from "@utils/format";
-import { UpdateUser } from "./UpdateUser";
-import { DeleteUser } from "./DeleteUser";
 import { CreateUser } from "./CreateUser";
 import { Alert } from "@components/Alert";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { UserListItem } from "./UserListItem";
 
 export function UserList() {
   const users = useUsers({
@@ -27,11 +22,7 @@ export function UserList() {
       refetchOnWindowFocus: true,
     },
   });
-  const [openDeleteDialog, setOpenDeleteDialog] = useState<string | null>(null);
-  const [openUpdateDialog, setOpenUpdateDialog] = useState<string | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const openMenu = Boolean(anchorEl);
   const [snackbarState, setSnackbarState] = useState<{
     open: boolean;
     severity: "success" | "error" | "warning" | "info" | undefined;
@@ -80,69 +71,7 @@ export function UserList() {
         </TableHead>
         <TableBody>
           {users.data.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>{user.firstName}</TableCell>
-              <TableCell>{user.lastName}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.phoneNumber}</TableCell>
-              <TableCell>{user.address}</TableCell>
-              <TableCell>{formatDate(user.dateOfBirth)}</TableCell>
-              <TableCell>{formatDate(user.hireDate)}</TableCell>
-              <TableCell>{user.annualTimeOffs}</TableCell>
-              <TableCell>{user.remainingAnnualTimeOffs}</TableCell>
-              <TableCell>{user.roles}</TableCell>
-              <TableCell>
-                <Button
-                  id="basic-button"
-                  color="primary"
-                  aria-controls={openMenu ? "user-settings" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={openMenu ? "true" : undefined}
-                  onClick={(e) => setAnchorEl(e.currentTarget)}
-                >
-                  <MoreHorizIcon />
-                </Button>
-                <Menu
-                  id="user-settings"
-                  anchorEl={anchorEl}
-                  open={openMenu}
-                  onClose={() => setAnchorEl(null)}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      setOpenUpdateDialog(user.id);
-                      setAnchorEl(null);
-                    }}
-                  >
-                    Düzenle
-                  </MenuItem>
-                  <MenuItem
-                    sx={{ color: "error.main" }}
-                    onClick={() => {
-                      setOpenDeleteDialog(user.id);
-                      setAnchorEl(null);
-                    }}
-                  >
-                    Sil
-                  </MenuItem>
-                </Menu>
-                <UpdateUser
-                  user={user}
-                  open={openUpdateDialog === user.id}
-                  handleClose={() => setOpenUpdateDialog(null)}
-                  setSnackbarState={setSnackbarState}
-                />
-                <DeleteUser
-                  id={user.id}
-                  open={openDeleteDialog === user.id}
-                  handleClose={() => setOpenDeleteDialog(null)}
-                  setSnackbarState={setSnackbarState}
-                />
-              </TableCell>
-            </TableRow>
+            <UserListItem user={user} setSnackbarState={setSnackbarState} />
           ))}
         </TableBody>
       </Table>

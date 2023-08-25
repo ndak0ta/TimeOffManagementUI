@@ -1,14 +1,31 @@
 import { useState } from "react";
 import { useUser } from "@lib/auth";
 import { formatDate } from "@utils/format";
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { UpdateContact } from "../components/UpdateContact";
 import ChangePassword from "../components/ChangePassword";
+import { Alert } from "@components/Alert";
 
 export function UserProfile() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openChangePasswordDialog, setOpenChangePasswordDialog] =
     useState(false);
+  const [snackbarState, setSnackbarState] = useState<{
+    open: boolean;
+    severity: "success" | "error" | "warning" | "info" | undefined;
+    message: string;
+  }>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
   const user = useUser({
     refetchOnMount: false,
   }).data || {
@@ -128,16 +145,40 @@ export function UserProfile() {
           open={openUpdateDialog}
           user={user}
           handleClose={() => setOpenUpdateDialog(false)}
+          setSnackbarState={setSnackbarState}
         />
         <ChangePassword
           id={user.id}
           open={openChangePasswordDialog}
           handleClose={() => setOpenChangePasswordDialog(false)}
+          setSnackbarState={setSnackbarState}
         />
       </Box>
       <Typography>
         Bu bilgilerde bir hata olduğunu düşünüyorsanız amirinize bildiriniz
       </Typography>
+      <Snackbar
+        open={snackbarState.open}
+        autoHideDuration={3000}
+        onClose={() => {
+          setSnackbarState({
+            ...snackbarState,
+            open: false,
+          });
+        }}
+      >
+        <Alert
+          severity={snackbarState.severity}
+          onClose={() => {
+            setSnackbarState({
+              ...snackbarState,
+              open: false,
+            });
+          }}
+        >
+          {snackbarState.message}
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 }

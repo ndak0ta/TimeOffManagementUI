@@ -5,23 +5,27 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Snackbar,
   TextField,
 } from "@mui/material";
 import { useChangePassword } from "../api/changePassword";
-import { useState } from "react";
-import { Alert } from "@components/Alert";
+import { Dispatch, useState } from "react";
 
 type ChangePasswordProps = {
   id: string;
   open: boolean;
   handleClose: () => void;
+  setSnackbarState: Dispatch<{
+    open: boolean;
+    severity: "success" | "error" | "warning" | "info" | undefined;
+    message: string;
+  }>;
 };
 
 export default function ChangePassword({
   id,
   open,
   handleClose,
+  setSnackbarState,
 }: ChangePasswordProps) {
   const changePassword = useChangePassword();
   const [values, setValues] = useState({
@@ -29,32 +33,29 @@ export default function ChangePassword({
     newPassword: "",
   });
   const [passwordsMatch, setPasswordsMatch] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [succesSnacbarOpen, setSuccesSnacbarOpen] = useState(false);
-  const [errorSnacbarOpen, setErrorSnacbarOpen] = useState(false);
 
   const handleChangePassword = async () => {
     if (passwordsMatch) {
-      await changePassword.mutateAsync({ id, ...values }).catch((err) => {
-        setErrorMessage(err.response.data.error);
-        setErrorSnacbarOpen(true);
-      });
-      if (changePassword.isSuccess) {
-        setSuccesSnacbarOpen(true);
-      }
+      await changePassword
+        .mutateAsync({ id, ...values })
+        .catch((err) => {
+          setSnackbarState({
+            open: true,
+            severity: "error",
+            message: err.response.data.message,
+          });
+        })
+        .finally(() => {
+          if (changePassword.isSuccess) {
+            setSnackbarState({
+              open: true,
+              severity: "success",
+              message: "Şifre değiştirildi.",
+            });
+          }
+          handleClose();
+        });
     }
-  };
-
-  const handleSnacbarClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setSuccesSnacbarOpen(false);
-    setErrorSnacbarOpen(false);
   };
 
   return (
@@ -97,24 +98,6 @@ export default function ChangePassword({
             setPasswordsMatch(e.target.value === values.newPassword);
           }}
         />
-        <Snackbar
-          open={errorSnacbarOpen}
-          autoHideDuration={6000}
-          onClose={handleSnacbarClose}
-        >
-          <Alert severity="error" onClose={handleSnacbarClose}>
-            {errorMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={succesSnacbarOpen}
-          onClose={handleSnacbarClose}
-          autoHideDuration={3000}
-        >
-          <Alert severity="success" onClose={handleSnacbarClose}>
-            Şifren başarıyla değiştirildi.
-          </Alert>
-        </Snackbar>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>İptal</Button>

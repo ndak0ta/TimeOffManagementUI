@@ -1,4 +1,3 @@
-import { Authorization, ROLES } from "@lib/authorization";
 import { useDeleteTimeOff } from "../api/deleteTimeOff";
 import {
   Button,
@@ -29,35 +28,33 @@ export default function DeleteTimeOff({
   };
 
   return (
-    <Authorization allowedRoles={[ROLES.EMPLOYEE]}>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">İzin talebi silinecek</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            İzin talebi silinecek devam etmek istiyor musunuz?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleClose}
-            disabled={deleteTimeOffMutation.isLoading}
-          >
-            İptal
-          </Button>
-          <Button
-            onClick={handleDelete}
-            autoFocus
-            disabled={deleteTimeOffMutation.isLoading}
-          >
-            Onayla
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Authorization>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">İzin talebi silinecek</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          İzin talebi silinecek devam etmek istiyor musunuz?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={handleClose}
+          disabled={deleteTimeOffMutation.isLoading}
+        >
+          İptal
+        </Button>
+        <Button
+          onClick={handleDelete}
+          autoFocus
+          disabled={deleteTimeOffMutation.isLoading}
+        >
+          Onayla
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

@@ -1,8 +1,7 @@
 import axios from "@lib/axios";
 import { User } from "../types";
-import { MutationConfig } from "@lib/react-query";
+import { MutationConfig, queryClient } from "@lib/react-query";
 import { useMutation } from "@tanstack/react-query";
-import { useUsers } from "./getUsers";
 
 type CreateUserDTO = {
     firstName: string;
@@ -14,8 +13,8 @@ type CreateUserDTO = {
     address: string;
 };
 
-export const createUser = async (dto: CreateUserDTO): Promise<User> => {
-    const response = await axios.post('/user', dto);
+export const createUser = async (user: CreateUserDTO): Promise<User> => {
+    const response = await axios.post('/user', user);
     return response.data;
 }
 
@@ -24,14 +23,20 @@ type UseCreateUserOptions = {
 };
 
 export const useCreateUser = (options: UseCreateUserOptions = {}) => {
-    const users = useUsers();
-
     return useMutation({
-        onSuccess: (data, variables, context: any) => {
-            users.refetch();
+        onMutate: async (user: CreateUserDTO) => {
+            await queryClient.cancelQueries(['users']);
+            const previousUsers = queryClient.getQueryData<User[]>(['users']);
+
+            queryClient.setQueryData(['users'], [...(previousUsers || []), user]);
+
+            return { previousUsers };
         },
         onError: (err, variables, context: any) => {
-            users.refetch();
+            queryClient.setQueryData(['users'], context.previousUsers);
+        },
+        onSuccess: (data, variables, context: any) => {
+            queryClient.invalidateQueries(['users']);
         },
         ...options,
         mutationFn: createUser,
