@@ -6,6 +6,8 @@ import { Grid, Paper } from "@mui/material";
 import UserCard from "../components/UserCard";
 import DashboardLayout from "@components/DashboardLayout";
 
+
+// TODO bu componenti revize et timeoffs'un içine taşınabilir
 export function MainPage() {
   const user = useUser();
 

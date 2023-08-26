@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -18,7 +19,7 @@ export function UserList() {
   });
 
   if (users.isLoading) {
-    return <div>Loading...</div>; // TODO loading component
+    return <CircularProgress />;
   }
 
   if (!users.data) return null;

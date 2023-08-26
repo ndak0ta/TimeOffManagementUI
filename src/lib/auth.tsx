@@ -8,6 +8,7 @@ import {
   registerWithUsernameAndPassword,
 } from "@features/auth/api/register";
 import { AuthUser, UserResponse } from "@features/auth/types";
+import { CircularProgress } from "@mui/material";
 import { storage } from "@utils/storage";
 import { configureAuth } from "react-query-auth";
 
@@ -49,7 +50,7 @@ const authConfig = {
   registerFn,
   logoutFn,
   AuthLoader() {
-    return <div>Loading...</div>; // TODO: replace with a loading spinner
+    return <CircularProgress />;
   },
 };
 

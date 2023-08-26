@@ -38,8 +38,6 @@ export const useApproveTimeOff = ({ config }: UseApproveTimeOffOptions = {}) => 
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['timeOffs']);
-
-            // TODO bildirim eklenebilir
         },
         ...config,
         mutationFn: approveTimeOff,

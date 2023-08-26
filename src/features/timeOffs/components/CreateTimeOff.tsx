@@ -12,6 +12,8 @@ import {
   TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
 
 type CreateTimeOffProps = {
   open: boolean;
@@ -26,6 +28,7 @@ export default function CreateTimeOff({
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState(dayjs(new Date()));
   const [endDate, setEndDate] = useState(dayjs(new Date()));
+  const setSnacbarState = useSetAtom(snackbarAtom);
 
   const defaultStartDate = dayjs(new Date()).add(1, "day");
   const defaultEndDate = dayjs(new Date()).add(1, "day");
@@ -37,7 +40,19 @@ export default function CreateTimeOff({
         startDate: startDate.toDate(),
         endDate: endDate.toDate(),
       })
-      .then(() => {
+      .catch((error) => {
+        setSnacbarState({
+          open: true,
+          message: error.response.data.message || "Bir hata oluştu.",
+          severity: "error",
+        });
+      })
+      .finally(() => {
+        setSnacbarState({
+          open: true,
+          message: "İzin talebi oluşturuldu.",
+          severity: "success",
+        });
         handleClose();
       });
   };

@@ -5,11 +5,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import { BrowserRouter } from "react-router-dom";
 import { queryClient } from "../lib/react-query";
-import { ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "@utils/theme";
 import { NODE_ENV } from "@config/constants";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "dayjs/locale/tr";
+import LoadingSpinner from "@components/LoadingSpinner";
 
 const fallbackRender = ({ error }: FallbackProps) => {
   return (
@@ -26,7 +27,7 @@ type AppProviderProps = {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
-    <Suspense>
+    <Suspense fallback={<LoadingSpinner />}>
       <ErrorBoundary fallbackRender={fallbackRender}>
         <QueryClientProvider client={queryClient}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="tr">
@@ -34,6 +35,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
               {NODE_ENV !== "production" ? (
                 <ReactQueryDevtools initialIsOpen={false} />
               ) : null}
+              <CssBaseline />
               <BrowserRouter>{children}</BrowserRouter>
             </ThemeProvider>
           </LocalizationProvider>

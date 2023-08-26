@@ -22,7 +22,6 @@ type UpdateProfileProps = {
   }>;
 };
 
-// TODO başarılı ve başarırısız durumları için alert ekle
 export function UpdateContact({
   open,
   user,

@@ -10,6 +10,7 @@ import { useTimeOffs } from "../api/getTimeOffs";
 import { Authorization, ROLES } from "@lib/authorization";
 import ApproveTimeOff from "./ApproveTimeOff";
 import { ApproveCancelTimeOff } from "./ApproveCancelTimeOff";
+import LoadingSpinner from "@components/LoadingSpinner";
 
 export default function TimeOffList() {
   const timeOffs = useTimeOffs({
@@ -21,7 +22,7 @@ export default function TimeOffList() {
   });
 
   if (timeOffs.isLoading) {
-    return <div>Loading...</div>; // TODO: replace with loading component
+    return <LoadingSpinner />;
   }
 
   return (

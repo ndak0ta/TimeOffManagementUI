@@ -4,7 +4,7 @@ import Layout from "../components/Layout";
 import { useUser } from "@lib/auth";
 import { useEffect } from "react";
 
-export default function Login() {
+export function Login() {
   const navigate = useNavigate();
   const user = useUser();
 

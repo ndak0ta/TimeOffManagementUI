@@ -44,7 +44,6 @@ export const useCreateTimeOff = ({ config }: UseCreateTimeOffOptions = {}) => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['timeOffs']);
-            // TODO bildirim eklenebilir
         },
         ...config,
         mutationFn: createTimeOff,

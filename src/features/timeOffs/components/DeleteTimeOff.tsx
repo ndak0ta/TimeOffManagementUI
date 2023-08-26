@@ -1,3 +1,4 @@
+import { useSetAtom } from "jotai";
 import { useDeleteTimeOff } from "../api/deleteTimeOff";
 import {
   Button,
@@ -7,6 +8,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { snackbarAtom } from "@stores/snackbar";
 
 type DeleteTimeOffProps = {
   id: number;
@@ -20,11 +22,26 @@ export default function DeleteTimeOff({
   handleClose,
 }: DeleteTimeOffProps) {
   const deleteTimeOffMutation = useDeleteTimeOff();
+  const setSnacbarState = useSetAtom(snackbarAtom);
 
   const handleDelete = async () => {
-    await deleteTimeOffMutation.mutateAsync({ id }).then(() => {
-      handleClose();
-    });
+    await deleteTimeOffMutation
+      .mutateAsync({ id })
+      .catch((error) => {
+        setSnacbarState({
+          open: true,
+          message: error.response.data.message || "Bir hata oluştu.",
+          severity: "error",
+        });
+      })
+      .finally(() => {
+        setSnacbarState({
+          open: true,
+          message: "İzin talebi silindi.",
+          severity: "success",
+        });
+        handleClose();
+      });
   };
 
   return (

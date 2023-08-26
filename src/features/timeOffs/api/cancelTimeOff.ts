@@ -38,8 +38,6 @@ export const useCancelTimeOff = ({ config }: UseCancelTimeOffOptions = {}) => {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(["timeOffs"]);
-
-            // TODO bildirim eklenebilir
         },
         ...config,
         mutationFn: cancelTimeOff,

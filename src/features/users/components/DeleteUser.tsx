@@ -21,7 +21,7 @@ type DeleteuserProps = {
     message: string;
   }>;
 };
-// TODO authentication için geri dön
+
 export const DeleteUser = ({
   id,
   open,

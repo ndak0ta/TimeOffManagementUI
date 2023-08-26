@@ -14,6 +14,7 @@ import { Authorization, ROLES } from "@lib/authorization";
 import CancelTimeOff from "./CancelTimeOff";
 import UpdateTimeOff from "./UpdateTimeOff";
 import DrawCancelTimeOff from "./DrawCancelTimeOff";
+import LoadingSpinner from "@components/LoadingSpinner";
 
 export default function UserTimeOffList() {
   const timeOffs = useUserTimeOffs({
@@ -27,7 +28,7 @@ export default function UserTimeOffList() {
   const [openUpdateDialog, setOpenUpdateDialog] = useState<Number | null>(null);
 
   if (timeOffs.isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

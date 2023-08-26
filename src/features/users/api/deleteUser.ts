@@ -16,8 +16,6 @@ type UseDeleteUserOptions = {
 };
 
 export const useDeleteUser = ({ config }: UseDeleteUserOptions = {}) => {
-    // TODO bildirim sistemi ekliyebilirsin
-
     return useMutation({
         onMutate: async (deletedUser: DeleteUserDTO) => {
             await queryClient.cancelQueries(["users"]);

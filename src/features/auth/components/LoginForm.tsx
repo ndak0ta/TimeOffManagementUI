@@ -3,7 +3,6 @@ import { useLogin } from "@lib/auth";
 import {
   Box,
   Button,
-  CssBaseline,
   Grid,
   Link,
   Snackbar,
@@ -61,7 +60,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
   return (
     <Fragment>
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,

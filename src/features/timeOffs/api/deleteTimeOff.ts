@@ -32,8 +32,6 @@ export const useDeleteTimeOff = ({ config }: UseDeleteTimeOffOptions = {}) => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['timeOffs']);
-
-            // TODO bildirim eklenebilir
         },
         ...config,
         // @ts-ignore

@@ -12,6 +12,8 @@ import { Authorization, ROLES } from "@lib/authorization";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
 import dayjs from "dayjs";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
 
 type UpdateTimeOffProps = {
   timeOff: UpdateTimeOffDTO;
@@ -26,11 +28,26 @@ export default function UpdateTimeOff({
 }: UpdateTimeOffProps) {
   const updateTimeOffMutation = useUpdateTimeOff();
   const [updatedTimeOff, setUpdatedTimeOff] = useState(timeOff);
+  const setSnacbarState = useSetAtom(snackbarAtom);
 
   const handleUpdate = async () => {
-    await updateTimeOffMutation.mutateAsync(updatedTimeOff).then(() => {
-      handleClose();
-    });
+    await updateTimeOffMutation
+      .mutateAsync(updatedTimeOff)
+      .catch((error) => {
+        setSnacbarState({
+          open: true,
+          message: error.response.data.message || "Bir hata oluştu.",
+          severity: "error",
+        });
+      })
+      .finally(() => {
+        setSnacbarState({
+          open: true,
+          message: "İzin talebi güncellendi.",
+          severity: "success",
+        });
+        handleClose();
+      });
   };
 
   return (
