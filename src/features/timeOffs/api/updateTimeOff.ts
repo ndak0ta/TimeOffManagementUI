@@ -24,26 +24,24 @@ export const useUpdateTimeOff = ({ config }: UseUpdateTimeOffOptions = {}) => {
         onMutate: async (updatedTimeOff: UpdateTimeOffDTO) => {
             await queryClient.cancelQueries(['timeOffs']);
 
-            const previousTimeOff = queryClient.getQueryData<TimeOff>(['timeOffs', updatedTimeOff.id]);
+            const previousTimeOffs = queryClient.getQueryData<TimeOff[]>(['timeOffs']);
 
-            queryClient.setQueryData(['timeOffs', updatedTimeOff.id], {
-                ...previousTimeOff,
-                ...updatedTimeOff,
-            });
+            queryClient.setQueryData(['timeOffs'], previousTimeOffs?.map((timeOff) => {
+                if (timeOff.id === updatedTimeOff.id) {
+                    return { ...timeOff, ...updatedTimeOff };
+                }
+                return timeOff;
+            }) || []);
 
-            return { previousTimeOff };
+            return { previousTimeOffs };
         },
         onError: (error, variables, context: any) => {
-            if (context?.previousTimeOff) {
-                queryClient.setQueryData(['timeOffs', context.previousTimeOff.id], context.previousTimeOff);
+            if (context?.previousTimeOffs) {
+                queryClient.setQueryData(['timeOffs'], context.previousTimeOffs);
             }
-
-            // TODO alert eklenebilir
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(['timeOffs', data.id]);
-
-            // TODO bildirim eklenebilir
         },
         ...config,
         mutationFn: updateTimeOff,

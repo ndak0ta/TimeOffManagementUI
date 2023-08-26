@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useUpdateUser } from "../api/updateUser";
 import { Dispatch, useState } from "react";
-import { DateTimePicker } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { User } from "../types";
 
@@ -151,7 +151,7 @@ export const UpdateUser = ({
           }}
           sx={{ mb: 2 }}
         />
-        <DateTimePicker
+        <DatePicker
           autoFocus
           label="Doğum Tarihi"
           // @ts-ignore
@@ -161,7 +161,7 @@ export const UpdateUser = ({
           }}
           sx={{ width: "100%", mb: 2 }}
         />
-        <DateTimePicker
+        <DatePicker
           autoFocus
           label="İşe Giriş Tarihi"
           // @ts-ignore

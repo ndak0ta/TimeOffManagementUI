@@ -23,6 +23,7 @@ export const useCreateTimeOff = ({ config }: UseCreateTimeOffOptions = {}) => {
         onMutate: async (newTimeOff: CreateTimeOffDTO) => {
             await queryClient.cancelQueries(['timeOffs']);
             const previousTimeOffs = queryClient.getQueryData<TimeOff[]>(['timeOffs']);
+
             queryClient.setQueryData(['timeOffs'], [...(previousTimeOffs || []), {
                 ...newTimeOff,
                 id: Math.random(),
@@ -40,8 +41,6 @@ export const useCreateTimeOff = ({ config }: UseCreateTimeOffOptions = {}) => {
             if (context?.previousTimeOffs) {
                 queryClient.setQueryData(['timeOffs'], context.previousTimeOffs);
             }
-
-            // TODO alert eklenebilir
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['timeOffs']);

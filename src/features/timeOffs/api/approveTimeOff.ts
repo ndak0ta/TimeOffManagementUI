@@ -21,23 +21,22 @@ export const useApproveTimeOff = ({ config }: UseApproveTimeOffOptions = {}) => 
     return useMutation({
         onMutate: async (approveTimeOff: ApproveTimeOffDTO) => {
             await queryClient.cancelQueries(['timeOffs']);
-            const previousTimeOff = queryClient.getQueryData<TimeOff[]>(['timeOffs', approveTimeOff.timeOffId]);
-            queryClient.setQueryData(['timeOffs', approveTimeOff.timeOffId], {
-                ...previousTimeOff,
-                isApproved: approveTimeOff.isApproved,
-                
-            });
+            const previousTimeOffs = queryClient.getQueryData<TimeOff[]>(['timeOffs']);
+            queryClient.setQueryData(['timeOffs'], previousTimeOffs?.map((timeOff) => {
+                if (timeOff.id === approveTimeOff.timeOffId) {
+                    return { ...timeOff, isApproved: approveTimeOff.isApproved };
+                }
+                return timeOff;
+            }) || []);
 
-            return { previousTimeOff };
+            return { previousTimeOffs };
         },
         onError(error, variables, context: any) {
             if (context?.previousTimeOffs) {
-                queryClient.setQueryData(['timeOffs', context.previousTimeOff.id], context.previousTimeOff);
+                queryClient.setQueryData(['timeOffs'], context.previousTimeOffs);
             }
-
-            // TODO alert eklenebilir
         },
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries(['timeOffs']);
 
             // TODO bildirim eklenebilir

@@ -153,8 +153,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         autoHideDuration={3000}
         onClose={() => {
           setSnackbarState({
-            ...snackbarState,
             open: false,
+            severity: "success",
+            message: "",
           });
         }}
       >
@@ -162,8 +163,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           severity={snackbarState.severity}
           onClose={() => {
             setSnackbarState({
-              ...snackbarState,
               open: false,
+              severity: "success",
+              message: "",
             });
           }}
         >

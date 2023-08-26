@@ -20,19 +20,24 @@ export const useDrawCancelTimeOff = ({ config }: UseDrawCancelTimeOff = {}) => {
     return useMutation({
         onMutate: async (drawCancelTimeOff: DrawCancelTimeOffDTO) => {
             await queryClient.cancelQueries(["timeOffs"]);
-            const previousTimeOff = queryClient.getQueryData<TimeOff>(["timeOffs", drawCancelTimeOff.id]);
+            const previousTimeOffs = queryClient.getQueryData<TimeOff[]>(["timeOffs"]);
 
-            queryClient.setQueryData(["timeOffs", drawCancelTimeOff.id],  {
-                ...previousTimeOff,
-                hasCancelRequest: false
-            });
-            return { previousTimeOff };
+            queryClient.setQueryData(["timeOffs", drawCancelTimeOff.id], (previousTimeOffs || []).map((timeOff) => {
+                if (timeOff.id === drawCancelTimeOff.id) {
+                    return { ...timeOff, isApproved: false };
+                }
+                return timeOff;
+            }) || [])
+            ;
+            return { previousTimeOffs };
         },
         onError: (err, drawCancelTimeOff, context: any) => {
-            queryClient.setQueryData(["timeOffs", drawCancelTimeOff.id], context.previousTimeOff);
+            if (context?.previousTimeOff) {
+                queryClient.setQueryData(["timeOffs"], context.previousTimeOff);
+            }
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["timeOffs"]); // TODO - Refetch only the timeOff that was updated
+            queryClient.invalidateQueries(["timeOffs"]);
         },
         ...config,
         mutationFn: drawCancelTimeOff,

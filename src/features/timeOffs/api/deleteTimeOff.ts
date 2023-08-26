@@ -16,7 +16,7 @@ type UseDeleteTimeOffOptions = {
     config?: MutationConfig<typeof deleteTimeOff>;
 }
 
-export const useDeleteTimeOff = ({config}: UseDeleteTimeOffOptions = {}) => {
+export const useDeleteTimeOff = ({ config }: UseDeleteTimeOffOptions = {}) => {
     return useMutation({
         onMutate: async (timeOffId: number) => {
             await queryClient.cancelQueries(['timeOffs']);
@@ -29,8 +29,6 @@ export const useDeleteTimeOff = ({config}: UseDeleteTimeOffOptions = {}) => {
             if (context?.previousTimeOffs) {
                 queryClient.setQueryData(['timeOffs'], context.previousTimeOffs);
             }
-
-            // TODO alert eklenebilir
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['timeOffs']);

@@ -21,25 +21,24 @@ export const useApproveCancelTimeOff = ({ config }: UseApproveCancelTimeOffOptio
     return useMutation({
         onMutate: async (approveCancelTimeOff: ApproveCancelTimeOffDTO) => {
             await queryClient.cancelQueries(['timeOffs']);
-
-            const previousTimeOff = queryClient.getQueryData<TimeOff[]>(['timeOffs', approveCancelTimeOff.timeOffId]);
+            const previousTimeOffs = queryClient.getQueryData<TimeOff[]>(['timeOffs']);
             
-            queryClient.setQueryData(['timeOffs', approveCancelTimeOff.timeOffId], {
-                ...previousTimeOff,
-                isApproved: approveCancelTimeOff.isApproved,
-            });
+            queryClient.setQueryData(['timeOffs'], previousTimeOffs?.map((timeOff) => {
+                if (timeOff.id === approveCancelTimeOff.timeOffId) {
+                    return { ...timeOff, isApproved: approveCancelTimeOff.isApproved };
+                }
+                return timeOff;
+            }) || []);
 
-            return { previousTimeOff };
+            return { previousTimeOffs };
         },
         onError(error, variables, context: any) {
             if (context?.previousTimeOffs) {
-                queryClient.setQueryData(['timeOffs', context.previousTimeOff.id], context.previousTimeOff);
+                queryClient.setQueryData(['timeOffs'], context.previousTimeOffs);
             }
-
-            // TODO alert eklenebilir
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries(['timeOffs']); // TODO timeOffs yerine sadece tek bir timeOff refetch edilebilir
+            queryClient.invalidateQueries(['timeOffs']);
 
             // TODO bildirim eklenebilir
         },

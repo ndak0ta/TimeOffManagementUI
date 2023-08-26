@@ -21,22 +21,24 @@ export const useAddUserToRole = ({ config }: addUserToRoleOptions = {}) => {
     return useMutation({
         onMutate: async ({ userId, role }) => {
             await queryClient.cancelQueries(["users", userId]);
-            const previousUser = queryClient.getQueryData<User>(["users", userId]);
+            const previousUsers = queryClient.getQueryData<User[]>(["users"]);
             
-            queryClient.setQueryData(["users", userId], {
-                ...previousUser,
-                roles: [role],
-            });
+            queryClient.setQueryData(["users"], previousUsers?.map((user) => {
+                if (user.id === userId) {
+                    return { ...user, roles: [ role ] };
+                }
+                return user;
+            }) || []);
 
-            return { previousUser };
+            return { previousUsers };
         },
         onError: (error, variables, context: any) => {
-            if (context?.previousUser) {
-                queryClient.setQueryData(["users", variables.userId], context.previousUser);
+            if (context?.previousUsers) {
+                queryClient.setQueryData(["users"], context.previousUsers);
             }
         },
-        onSuccess: ({ userId }) => {
-            queryClient.invalidateQueries(["users", userId]);
+        onSuccess: () => {
+            queryClient.invalidateQueries(["users"]);
         },
         ...config,
         mutationFn: addUserToRole,

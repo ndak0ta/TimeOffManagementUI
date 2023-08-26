@@ -27,23 +27,25 @@ type UseUpdateUserOptions = {
 export const useUpdateUser = ({ config }: UseUpdateUserOptions = {}) => {
     return useMutation({
         onMutate: async (data: UpdateUserDTO) => {
-            await queryClient.cancelQueries(['users']);
-            const previousUser = queryClient.getQueryData<User>(['users', data.id]);
+            await queryClient.cancelQueries(["users", data.id]);
+            const previousUsers = queryClient.getQueryData<User[]>(["users"]);
+            
+            queryClient.setQueryData(["users"], previousUsers?.map((user) => {
+                if (user.id === data.id) {
+                    return { ...user, ...data };
+                }
+                return user;
+            }) || []);
 
-            queryClient.setQueryData(['users', data.id], {
-                ...(previousUser || []),
-                ...data,
-            });
-
-            return { previousUser };
+            return { previousUsers };
         },
         onError: (err, data, context: any) => {
             if (context?.previousUser) {
-                queryClient.setQueryData(['users', data.id], context.previousUser);
+                queryClient.setQueryData(["users"], context.previousUsers);
             }
         },
-        onSuccess: (data) => {
-            queryClient.invalidateQueries(['users', data.id]);
+        onSuccess: () => {
+            queryClient.invalidateQueries(["users"]);
         },
         ...config,
         mutationFn: updateUser,

@@ -25,6 +25,8 @@ export const useDeleteUser = ({ config }: UseDeleteUserOptions = {}) => {
             const previeusUsers = queryClient.getQueryData<User[]>(["users"]);
 
             queryClient.setQueryData<User[]>(["users"], previeusUsers?.filter((user) => user.id !== deletedUser.id) || []);
+
+            return { previeusUsers };
         },
         onError: (err, variables, context: any) => {
             if (context?.previeusUsers)
