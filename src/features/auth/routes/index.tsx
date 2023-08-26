@@ -4,7 +4,7 @@ import Login from "./Login";
 export const AuthRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
     </Routes>
   );
 };

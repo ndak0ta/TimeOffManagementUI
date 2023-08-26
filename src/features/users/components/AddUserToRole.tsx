@@ -71,9 +71,13 @@ export default function AddUserToRole({
           label="Rol"
           onChange={(e) => setRole(e.target.value as string)}
         >
-          {(Object.keys(ROLES) as Array<keyof typeof ROLES>).map((role) => (
-            <MenuItem value={ROLES[role]}>{ROLES[role]}</MenuItem>
-          ))}
+          {(Object.keys(ROLES) as Array<keyof typeof ROLES>).map(
+            (role, index) => (
+              <MenuItem key={index} value={ROLES[role]}>
+                {ROLES[role]}
+              </MenuItem>
+            )
+          )}
         </Select>
       </DialogContent>
       <DialogActions>

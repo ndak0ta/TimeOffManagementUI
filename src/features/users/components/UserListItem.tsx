@@ -1,4 +1,4 @@
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { Button, Menu, MenuItem, TableCell, TableRow } from "@mui/material";
 import { User } from "../types";
 import { formatDate } from "@utils/format";
@@ -6,22 +6,21 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { UpdateUser } from "./UpdateUser";
 import { DeleteUser } from "./DeleteUser";
 import AddUserToRole from "./AddUserToRole";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
 
 type UserListElementProps = {
+  key: number;
   user: User;
-  setSnackbarState: Dispatch<{
-    open: boolean;
-    severity: "success" | "error" | "warning" | "info" | undefined;
-    message: string;
-  }>;
 };
 
-export const UserListItem = ({ user, setSnackbarState }: UserListElementProps) => {
+export const UserListItem = ({ user }: UserListElementProps) => {
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openAddUserToRoleDialog, setOpenAddUserToRoleDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
+  const setSnackbarState = useSetAtom(snackbarAtom);
 
   return (
     <TableRow key={user.id}>

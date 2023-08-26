@@ -11,7 +11,7 @@ export default defineConfig({
     react(),
     eslint(),
     checker({
-      overlay: { initialIsOpen: false },
+      overlay: { initialIsOpen: false, position: 'br' },
       typescript: true,
       eslint: {
         lintCommand: 'eslint "./src/**/*.{ts,tsx}"',

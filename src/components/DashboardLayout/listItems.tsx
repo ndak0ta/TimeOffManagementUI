@@ -16,7 +16,7 @@ export default function ListItems() {
 
   return (
     <Fragment>
-      <ListItemButton onClick={() => navigate("/main")}>
+      <ListItemButton onClick={() => navigate("/")}>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>

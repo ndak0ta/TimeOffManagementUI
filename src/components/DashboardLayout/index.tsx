@@ -14,7 +14,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ListItems from "./listItems";
-import { Container } from "@mui/material";
+import { Container, Snackbar } from "@mui/material";
+import { Alert } from "@components/Alert";
+import { useAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
 
 const drawerWidth: number = 240;
 
@@ -71,6 +74,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+  const [snackbarState, setSnackbarState] = useAtom(snackbarAtom);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -144,6 +148,28 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           {children}
         </Container>
       </Box>
+      <Snackbar
+        open={snackbarState.open}
+        autoHideDuration={3000}
+        onClose={() => {
+          setSnackbarState({
+            ...snackbarState,
+            open: false,
+          });
+        }}
+      >
+        <Alert
+          severity={snackbarState.severity}
+          onClose={() => {
+            setSnackbarState({
+              ...snackbarState,
+              open: false,
+            });
+          }}
+        >
+          {snackbarState.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

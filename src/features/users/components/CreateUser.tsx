@@ -1,4 +1,4 @@
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { useCreateUser } from "../api/createUser";
 import {
   Button,
@@ -10,22 +10,15 @@ import {
   TextField,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
 
 type CreateUserProps = {
   open: boolean;
   handleClose: () => void;
-  setSnackbarState: Dispatch<{
-    open: boolean;
-    severity: "success" | "error" | "warning" | "info" | undefined;
-    message: string;
-  }>;
 };
 
-export const CreateUser = ({
-  open,
-  handleClose,
-  setSnackbarState,
-}: CreateUserProps) => {
+export const CreateUser = ({ open, handleClose }: CreateUserProps) => {
   const createUser = useCreateUser();
   const [values, setValues] = useState({
     id: "",
@@ -37,6 +30,7 @@ export const CreateUser = ({
     dateOfBirth: new Date(),
     hireDate: new Date(),
   });
+  const setSnackbarState = useSetAtom(snackbarAtom);
 
   const handleCreate = async () => {
     await createUser

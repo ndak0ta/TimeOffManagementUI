@@ -10,13 +10,13 @@ export default function Login() {
 
   useEffect(() => {
     if (user.data) {
-      navigate("/main");
+      navigate("/");
     }
   }, [user.data, navigate]);
 
   return (
     <Layout title="Giriş yap">
-      <LoginForm onSuccess={() => navigate("/main")} />
+      <LoginForm onSuccess={() => navigate("/")} />
     </Layout>
   );
 }

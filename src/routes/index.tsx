@@ -2,20 +2,20 @@ import { protectedRoutes } from "./protected";
 import { publicRoutes } from "./public";
 import { useRoutes } from "react-router-dom";
 import { useUser } from "@lib/auth";
-import Landing from "@features/misc/routes/Landing";
 
 export const AppRoutes = () => {
   const user = useUser();
 
-  const commonRoutes = [{ path: "/", element: <Landing /> }];
+  const commonRoutes = [
+    {
+      path: "*",
+      element: <h1>404</h1>,
+    },
+  ];
 
-  const routes = [...publicRoutes];
+  const routes = user.data ? protectedRoutes : publicRoutes;
 
-  if (user.data) {
-    routes.push(...protectedRoutes);
-  }
-
-  const element = useRoutes([...commonRoutes, ...routes]);
+  const element = useRoutes([...routes, ...commonRoutes]);
 
   return <>{element}</>;
 };
