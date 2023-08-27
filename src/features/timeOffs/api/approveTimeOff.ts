@@ -1,5 +1,5 @@
 import axios from "@lib/axios";
-import { TimeOff } from "../types";
+import { TimeOff, TimeOffStates } from "../types";
 import { MutationConfig, queryClient } from "@lib/react-query";
 import { useMutation } from "@tanstack/react-query"
 
@@ -24,7 +24,7 @@ export const useApproveTimeOff = ({ config }: UseApproveTimeOffOptions = {}) => 
             const previousTimeOffs = queryClient.getQueryData<TimeOff[]>(['timeOffs']);
             queryClient.setQueryData(['timeOffs'], previousTimeOffs?.map((timeOff) => {
                 if (timeOff.id === approveTimeOff.timeOffId) {
-                    return { ...timeOff, isApproved: approveTimeOff.isApproved };
+                    return { ...timeOff, status: approveTimeOff.isApproved ? TimeOffStates.APPROVED : TimeOffStates.REJECTED };
                 }
                 return timeOff;
             }) || []);
@@ -36,8 +36,19 @@ export const useApproveTimeOff = ({ config }: UseApproveTimeOffOptions = {}) => 
                 queryClient.setQueryData(['timeOffs'], context.previousTimeOffs);
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['timeOffs']);
+        onSuccess: (data) => {
+            queryClient.setQueryData<TimeOff[] | undefined>(['timeOffs'], (oldData) => {
+                if (!oldData) return oldData;
+              
+                const updatedData = oldData.map((timeOff) => {
+                  if (timeOff.id === data.id) {
+                    return data;
+                  }
+                  return timeOff;
+                });
+              
+                return updatedData;
+              });
         },
         ...config,
         mutationFn: approveTimeOff,

@@ -5,14 +5,14 @@ import { ROLES } from "@lib/authorization";
 import { Grid, Paper } from "@mui/material";
 import UserCard from "../components/UserCard";
 import DashboardLayout from "@components/DashboardLayout";
-
+import LoadingSpinner from "@components/LoadingSpinner";
 
 // TODO bu componenti revize et timeoffs'un içine taşınabilir
 export function MainPage() {
   const user = useUser();
 
   if (user.isLoading || !user.data) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

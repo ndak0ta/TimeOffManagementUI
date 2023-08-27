@@ -15,7 +15,7 @@ export type UpdateUserDTO = {
         hireDate: Date;
 };
 
-export const updateUser = async (data: UpdateUserDTO) => {
+export const updateUser = async (data: UpdateUserDTO): Promise<User> => {
     const response = await axios.put("/user", data);
     return response.data;
 }
@@ -44,8 +44,19 @@ export const useUpdateUser = ({ config }: UseUpdateUserOptions = {}) => {
                 queryClient.setQueryData(["users"], context.previousUsers);
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(["users"]);
+        onSuccess: (data) => {
+            queryClient.setQueryData<User[] | undefined>(['users'], (oldData) => {
+                if (!oldData) return oldData;
+              
+                const updatedData = oldData.map((user) => {
+                  if (user.id === data.id) {
+                    return data;
+                  }
+                  return user;
+                });
+              
+                return updatedData;
+              });
         },
         ...config,
         mutationFn: updateUser,

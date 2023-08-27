@@ -14,5 +14,6 @@ export enum TimeOffStates {
     APPROVED = 'Approved',
     REJECTED = 'Rejected',
     CANCELLED = 'Cancelled',
-    CANCEL_REQUESTED = 'Cancel Requested'
+    CANCEL_REQUESTED = 'Cancel Requested',
+    CANCEL_REJECTED = 'Cancel Rejected'
 }

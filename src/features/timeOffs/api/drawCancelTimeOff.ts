@@ -7,7 +7,7 @@ type DrawCancelTimeOffDTO = {
     id: number;
 }
 
-export const drawCancelTimeOff = async ({ id }: DrawCancelTimeOffDTO) => {
+export const drawCancelTimeOff = async ({ id }: DrawCancelTimeOffDTO): Promise<TimeOff> => {
     const response = await axios.post(`/timeoff/${id}/cancel-draw`);
     return response.data;
 }
@@ -36,8 +36,19 @@ export const useDrawCancelTimeOff = ({ config }: UseDrawCancelTimeOff = {}) => {
                 queryClient.setQueryData(["timeOffs"], context.previousTimeOff);
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(["timeOffs"]);
+        onSuccess: (data) => {
+            queryClient.setQueryData<TimeOff[] | undefined>(['timeOffs'], (oldData) => {
+                if (!oldData) return oldData;
+              
+                const updatedData = oldData.map((timeOff) => {
+                  if (timeOff.id === data.id) {
+                    return data;
+                  }
+                  return timeOff;
+                });
+              
+                return updatedData;
+              });
         },
         ...config,
         mutationFn: drawCancelTimeOff,

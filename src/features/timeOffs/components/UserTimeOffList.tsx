@@ -19,8 +19,6 @@ export default function UserTimeOffList() {
     },
   });
 
-  
-
   if (timeOffs.isLoading) {
     return <LoadingSpinner />;
   }

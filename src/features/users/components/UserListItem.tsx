@@ -10,7 +10,6 @@ import { useSetAtom } from "jotai";
 import { snackbarAtom } from "@stores/snackbar";
 
 type UserListElementProps = {
-  key: number;
   user: User;
 };
 

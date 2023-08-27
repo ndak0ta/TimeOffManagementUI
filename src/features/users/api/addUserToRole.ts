@@ -8,7 +8,7 @@ type AddUserToRoleDTO = {
     role: string;
 };
 
-export const addUserToRole = async ({ userId, role }: AddUserToRoleDTO) => {
+export const addUserToRole = async ({ userId, role }: AddUserToRoleDTO): Promise<User> => {
     const response = await axios.patch(`/user/${userId}/give-role/${role}`);
     return response.data;
 }
@@ -37,8 +37,19 @@ export const useAddUserToRole = ({ config }: addUserToRoleOptions = {}) => {
                 queryClient.setQueryData(["users"], context.previousUsers);
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(["users"]);
+        onSuccess: (data) => {
+            queryClient.setQueryData<User[] | undefined>(['users'], (oldData) => {
+                if (!oldData) return oldData;
+              
+                const updatedData = oldData.map((user) => {
+                  if (user.id === data.id) {
+                    return data;
+                  }
+                  return user;
+                });
+              
+                return updatedData;
+              });
         },
         ...config,
         mutationFn: addUserToRole,

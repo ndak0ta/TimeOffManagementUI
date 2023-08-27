@@ -11,7 +11,8 @@ export type UpdateUserContactDTO = {
 };
 
 export const updateUserContact = async ( data : UpdateUserContactDTO): Promise<User> => {
-    return axios.patch("/user/update-contact", data);
+    const response = await axios.patch("/user/update-contact", data);
+    return response.data;
 }
 
 type UseUpdateUserContactOptions = {
@@ -23,19 +24,33 @@ export const useUpdateUserContact = ({ config }: UseUpdateUserContactOptions = {
     return useMutation({
         onMutate: async (data: UpdateUserContactDTO) => {
             await queryClient.cancelQueries(["users"]);
-            const previousUser = queryClient.getQueryData<User>(["users", data.id]);
-            queryClient.setQueryData(["users", data.id], {
-                ...(previousUser || []),
-                ...data,
-            });
+            const previousUsers = queryClient.getQueryData<User[]>(["users"]);
+            
+            queryClient.setQueryData(["users"], previousUsers?.map((user) => {
+                if (user.id === data.id) {
+                    return { ...user, ...data };
+                }
+                return user;
+            }) || []);
 
-            return { previousUser };
+            return { previousUsers };
         },
         onError: (err, variables, context: any) => {
-            queryClient.setQueryData(["users", context.previousUser], context.previousUser);
+            queryClient.setQueryData(["users"], context.previousUsers);
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries(["users", data.id]);
+            queryClient.setQueryData<User[] | undefined>(['users'], (oldData) => {
+                if (!oldData) return oldData;
+              
+                const updatedData = oldData.map((user) => {
+                  if (user.id === data.id) {
+                    return data;
+                  }
+                  return user;
+                });
+              
+                return updatedData;
+              });
         },
         ...config,
         mutationFn: updateUserContact,

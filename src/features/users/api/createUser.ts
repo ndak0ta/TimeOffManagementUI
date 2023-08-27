@@ -36,7 +36,7 @@ export const useCreateUser = (options: UseCreateUserOptions = {}) => {
             queryClient.setQueryData(['users'], context.previousUsers);
         },
         onSuccess: (data, variables, context: any) => {
-            queryClient.invalidateQueries(['users']);
+            queryClient.setQueryData<User[] | undefined>(['users'], [...(context.previousUsers || []), data]);
         },
         ...options,
         mutationFn: createUser,

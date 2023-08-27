@@ -1,7 +1,7 @@
 import axios from "@lib/axios";
 import { MutationConfig, queryClient } from "@lib/react-query";
 import { useMutation } from "@tanstack/react-query";
-import { TimeOff } from "../types";
+import { TimeOff, TimeOffStates } from "../types";
 
 export type ApproveCancelTimeOffDTO = {
     timeOffId: number;
@@ -9,7 +9,7 @@ export type ApproveCancelTimeOffDTO = {
 }
 
 export const approveCancelTimeOff = async ({timeOffId , isApproved}: ApproveCancelTimeOffDTO): Promise<TimeOff> => {
-    const response = await axios.post(`/timeOff/${timeOffId}/approve-cancel`, isApproved);
+    const response = await axios.post(`/timeOff/${timeOffId}/approve-cancel/${isApproved}`);
     return response.data;
 }  
 
@@ -25,7 +25,7 @@ export const useApproveCancelTimeOff = ({ config }: UseApproveCancelTimeOffOptio
             
             queryClient.setQueryData(['timeOffs'], previousTimeOffs?.map((timeOff) => {
                 if (timeOff.id === approveCancelTimeOff.timeOffId) {
-                    return { ...timeOff, isApproved: approveCancelTimeOff.isApproved };
+                    return { ...timeOff, status: approveCancelTimeOff.isApproved ? TimeOffStates.CANCELLED : TimeOffStates.CANCEL_REJECTED };
                 }
                 return timeOff;
             }) || []);
@@ -37,8 +37,19 @@ export const useApproveCancelTimeOff = ({ config }: UseApproveCancelTimeOffOptio
                 queryClient.setQueryData(['timeOffs'], context.previousTimeOffs);
             }
         },
-        onSuccess: (data) => {
-            queryClient.invalidateQueries(['timeOffs']);
+        onSuccess: (data, variables, context) => {
+            queryClient.setQueryData<TimeOff[] | undefined>(['timeOffs'], (oldData) => {
+                if (!oldData) return oldData;
+              
+                const updatedData = oldData.map((timeOff) => {
+                  if (timeOff.id === data.id) {
+                    return data;
+                  }
+                  return timeOff;
+                });
+              
+                return updatedData;
+              });
         },
         ...config,
         mutationFn: approveCancelTimeOff,

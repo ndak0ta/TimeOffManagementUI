@@ -42,8 +42,8 @@ export const useCreateTimeOff = ({ config }: UseCreateTimeOffOptions = {}) => {
                 queryClient.setQueryData(['timeOffs'], context.previousTimeOffs);
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['timeOffs']);
+        onSuccess: (data, variables, context) => {
+            queryClient.setQueryData<TimeOff[] | undefined>(['timeOffs'], [...(context.previousTimeOffs || []), data]);
         },
         ...config,
         mutationFn: createTimeOff,

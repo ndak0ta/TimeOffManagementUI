@@ -23,15 +23,12 @@ export const useDeleteTimeOff = ({ config }: UseDeleteTimeOffOptions = {}) => {
             const previousTimeOffs = queryClient.getQueryData<TimeOff[]>(['timeOffs']);
             queryClient.setQueryData(['timeOffs'], (previousTimeOffs || []).filter(timeOff => timeOff.id !== timeOffId));
 
-            return {previousTimeOffs};
+            return { previousTimeOffs, timeOffId };
         },
         onError: (error: any, variables: any, context: any) => {
             if (context?.previousTimeOffs) {
                 queryClient.setQueryData(['timeOffs'], context.previousTimeOffs);
             }
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries(['timeOffs']);
         },
         ...config,
         // @ts-ignore

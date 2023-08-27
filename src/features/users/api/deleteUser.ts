@@ -30,9 +30,6 @@ export const useDeleteUser = ({ config }: UseDeleteUserOptions = {}) => {
             if (context?.previeusUsers)
                 queryClient.setQueryData<User[]>(["users"], context?.previeusUsers);
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(["users"]);
-        },
         ...config,
         mutationFn: deleteUser,
     });

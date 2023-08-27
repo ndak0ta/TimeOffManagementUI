@@ -6,7 +6,6 @@ import {
   TableRow,
 } from "@mui/material";
 import { useTimeOffs } from "../api/getTimeOffs";
-import { Authorization, ROLES } from "@lib/authorization";
 import LoadingSpinner from "@components/LoadingSpinner";
 import TimeOffListItem from "./TimeOffListItem";
 
@@ -24,7 +23,6 @@ export default function TimeOffList() {
   }
 
   return (
-    <Authorization allowedRoles={[ROLES.MANAGER]}>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -44,6 +42,5 @@ export default function TimeOffList() {
           ))}
         </TableBody>
       </Table>
-    </Authorization>
   );
 }

@@ -45,6 +45,9 @@ export default function TimeOffListItem({ timeOff }: TimeOffListItemProps) {
             content: <ApproveCancelTimeOff timeOffId={timeOff.id} />,
           });
           break;
+        case TimeOffStates.CANCEL_REJECTED:
+          setTimeOffStateInTR({ label: "İptal Reddedildi", content: <></> });
+          break;
         default:
           setTimeOffStateInTR({ label: "Bilinmeyen", content: <></> });
           break;

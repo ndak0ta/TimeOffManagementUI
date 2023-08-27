@@ -41,7 +41,18 @@ export const useUpdateTimeOff = ({ config }: UseUpdateTimeOffOptions = {}) => {
             }
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries(['timeOffs', data.id]);
+            queryClient.setQueryData<TimeOff[] | undefined>(['timeOffs'], (oldData) => {
+                if (!oldData) return oldData;
+              
+                const updatedData = oldData.map((timeOff) => {
+                  if (timeOff.id === data.id) {
+                    return data;
+                  }
+                  return timeOff;
+                });
+              
+                return updatedData;
+              });
         },
         ...config,
         mutationFn: updateTimeOff,
