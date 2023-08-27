@@ -41,6 +41,7 @@ export const ApproveCancelTimeOff = ({
         variant="text"
         color="error"
         onClick={() => handleApproveCancelTimeOff(false)}
+        disabled={approveCancelTimeOffMutation.isLoading}
       >
         Reddet
       </Button>
@@ -48,6 +49,7 @@ export const ApproveCancelTimeOff = ({
         variant="text"
         color="success"
         onClick={() => handleApproveCancelTimeOff(true)}
+        disabled={approveCancelTimeOffMutation.isLoading}
       >
         Onayla
       </Button>

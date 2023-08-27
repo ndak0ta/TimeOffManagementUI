@@ -1,8 +1,9 @@
 import axios from "@lib/axios";
 import { ExtractFnReturnType } from "@lib/react-query";
 import { useQuery } from "@tanstack/react-query";
+import { TimeOff } from "../types";
 
-export const getTimeOff = async (id: number) => {
+export const getTimeOff = async (id: number): Promise<TimeOff> => {
     const response = await axios.get(`/timeOff/${id}`);
     return response.data;
 }

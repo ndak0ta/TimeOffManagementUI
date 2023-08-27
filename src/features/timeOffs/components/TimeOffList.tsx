@@ -5,12 +5,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { formatDate, formatDateWithDay } from "@utils/format";
 import { useTimeOffs } from "../api/getTimeOffs";
 import { Authorization, ROLES } from "@lib/authorization";
-import ApproveTimeOff from "./ApproveTimeOff";
-import { ApproveCancelTimeOff } from "./ApproveCancelTimeOff";
 import LoadingSpinner from "@components/LoadingSpinner";
+import TimeOffListItem from "./TimeOffListItem";
 
 export default function TimeOffList() {
   const timeOffs = useTimeOffs({
@@ -30,40 +28,19 @@ export default function TimeOffList() {
       <Table size="small">
         <TableHead>
           <TableRow>
+            <TableCell>İsim</TableCell>
             <TableCell>Açılama</TableCell>
             <TableCell>Başlangıç Tarihi</TableCell>
             <TableCell>Bitiş Tarihi</TableCell>
             <TableCell>Toplam Gün Sayısı</TableCell>
             <TableCell>Oluşturulma Tarihi</TableCell>
-            <TableCell>Durum/İşlemler</TableCell>
+            <TableCell>Durum</TableCell>
+            <TableCell>İşlemler</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {timeOffs.data?.map((timeOff) => (
-            <TableRow key={timeOff.id}>
-              <TableCell>{timeOff.description}</TableCell>
-              <TableCell>{formatDateWithDay(timeOff.startDate)}</TableCell>
-              <TableCell>{formatDateWithDay(timeOff.endDate)}</TableCell>
-              <TableCell>{timeOff.totalDays}</TableCell>
-              <TableCell>{formatDate(timeOff.createdAt)}</TableCell>
-              <TableCell>
-                {!timeOff.isCancelled ? (
-                  timeOff.isApproved ? (
-                    timeOff.hasCancelRequest ? (
-                      <ApproveCancelTimeOff timeOffId={timeOff.id} />
-                    ) : (
-                      "Onaylandı"
-                    )
-                  ) : timeOff.isPending ? (
-                    <ApproveTimeOff id={timeOff.id} />
-                  ) : (
-                    "Rededildi"
-                  )
-                ) : (
-                  "İptal edildi"
-                )}
-              </TableCell>
-            </TableRow>
+          {timeOffs.data?.map((timeOff, index) => (
+            <TimeOffListItem key={index} timeOff={timeOff} />
           ))}
         </TableBody>
       </Table>

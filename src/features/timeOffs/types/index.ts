@@ -4,9 +4,15 @@ export type TimeOff = {
     startDate: Date;
     endDate: Date;
     totalDays: number;
-    isPending: boolean;
-    isApproved: boolean;
-    isCancelled: boolean;
+    status: string;
     createdAt: Date;
-    hasCancelRequest: boolean;
+    userId: string;
 };
+
+export enum TimeOffStates {
+    PENDING = 'Pending',
+    APPROVED = 'Approved',
+    REJECTED = 'Rejected',
+    CANCELLED = 'Cancelled',
+    CANCEL_REQUESTED = 'Cancel Requested'
+}
