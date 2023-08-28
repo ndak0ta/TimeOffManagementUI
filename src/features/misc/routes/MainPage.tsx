@@ -11,7 +11,7 @@ import LoadingSpinner from "@components/LoadingSpinner";
 export function MainPage() {
   const user = useUser();
 
-  if (user.isLoading || !user.data) {
+  if (user.isLoading) {
     return <LoadingSpinner />;
   }
 
