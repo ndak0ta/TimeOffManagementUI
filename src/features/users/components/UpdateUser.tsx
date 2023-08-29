@@ -12,6 +12,7 @@ import { Dispatch, useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { User } from "../types";
+import { PhoneMask } from "@components/PhoneMask";
 
 type UpdateUserProps = {
   open: boolean;
@@ -133,6 +134,9 @@ export const UpdateUser = ({
           fullWidth
           variant="standard"
           defaultValue={user.phoneNumber}
+          inputProps={{
+            inputComponent: PhoneMask as any,
+          }}
           onChange={(e) => {
             setValues({ ...values, phoneNumber: e.target.value });
           }}

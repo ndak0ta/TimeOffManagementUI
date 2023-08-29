@@ -20,7 +20,7 @@ type LoginFormProps = {
   onSuccess: () => void;
 };
 
-export const LoginForm: React.FC<LoginFormProps> = ({
+export const LoginForm = ({
   onSuccess,
 }: LoginFormProps) => {
   const login = useLogin();
@@ -34,12 +34,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await login.mutateAsync(values).catch((err) => {
-      if (err.response.status === 401) {
-        setError("Kullanıcı adı veya şifre hatalı");
-        setSnackbarOpen(true);
-        return;
-      }
-      setError(err.response.data.error);
+      setError("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
+      console.log(err);
+      setSnackbarOpen(true);
     });
 
     if (login.isSuccess) {
@@ -113,7 +110,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                Forgot password?
+                Şifremi Unuttum
               </Link>
             </Grid>
           </Grid>

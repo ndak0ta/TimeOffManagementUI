@@ -10,6 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import { AuthUser } from "@features/auth";
+import { PhoneMask } from "@components/PhoneMask";
 
 type UpdateProfileProps = {
   open: boolean;
@@ -86,6 +87,9 @@ export function UpdateContact({
           fullWidth
           variant="standard"
           defaultValue={values.phoneNumber}
+          inputProps={{
+            inputComponent: PhoneMask as any,
+          }}
           onChange={(e) => {
             setValues({ ...values, phoneNumber: e.target.value });
           }}

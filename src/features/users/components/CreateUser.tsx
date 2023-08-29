@@ -12,6 +12,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { useSetAtom } from "jotai";
 import { snackbarAtom } from "@stores/snackbar";
+import { PhoneMask } from "@components/PhoneMask";
 
 type CreateUserProps = {
   open: boolean;
@@ -104,9 +105,11 @@ export const CreateUser = ({ open, handleClose }: CreateUserProps) => {
           margin="dense"
           id="phoneNumber"
           label="Telefon Numarası"
-          type="tel"
           fullWidth
           variant="standard"
+          InputProps={{
+            inputComponent: PhoneMask as any,
+          }}
           onChange={(e) => {
             setValues({ ...values, phoneNumber: e.target.value });
           }}
