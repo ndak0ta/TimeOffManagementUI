@@ -17,21 +17,24 @@ import { snackbarAtom } from "@stores/snackbar";
 
 type CreateTimeOffProps = {
   open: boolean;
-  handleClose: () => void;
+  setOpen: (open: boolean) => void;
 };
 
-export default function CreateTimeOff({
-  open,
-  handleClose,
-}: CreateTimeOffProps) {
-  const createTimeOffMutation = useCreateTimeOff();
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(dayjs(new Date()));
-  const [endDate, setEndDate] = useState(dayjs(new Date()));
-  const setSnacbarState = useSetAtom(snackbarAtom);
-
+export default function CreateTimeOff({ open, setOpen }: CreateTimeOffProps) {
   const defaultStartDate = dayjs(new Date()).add(1, "day");
   const defaultEndDate = dayjs(new Date()).add(1, "day");
+  const createTimeOffMutation = useCreateTimeOff();
+  const [description, setDescription] = useState("");
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(defaultEndDate);
+  const setSnacbarState = useSetAtom(snackbarAtom);
+
+  const handleClose = () => {
+    setDescription("");
+    setStartDate(defaultStartDate);
+    setEndDate(defaultEndDate);
+    setOpen && setOpen(false);
+  };
 
   const handleOperation = async () => {
     await createTimeOffMutation
@@ -53,6 +56,9 @@ export default function CreateTimeOff({
           message: "İzin talebi oluşturuldu.",
           severity: "success",
         });
+        setDescription("");
+        setStartDate(defaultStartDate);
+        setEndDate(defaultEndDate);
         handleClose();
       });
   };
@@ -81,7 +87,7 @@ export default function CreateTimeOff({
             onChange={(date: Date | null) =>
               date ? setStartDate(dayjs(date)) : null
             }
-            format="DD/MM/YYYY" // TODO daha sonra gün isim olarak değiştirilebilir
+            format="DD/MM/YYYY"
             // @ts-ignore
             defaultValue={defaultStartDate}
             disablePast

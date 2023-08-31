@@ -26,7 +26,7 @@ export default function DeleteTimeOff({
 
   const handleDelete = async () => {
     await deleteTimeOffMutation
-      .mutateAsync({ id })
+      .mutateAsync({ timeOffId: id })
       .catch((error) => {
         setSnacbarState({
           open: true,

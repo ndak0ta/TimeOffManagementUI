@@ -9,33 +9,26 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import { Dispatch } from "react";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
+import { User } from "../types";
 
 type DeleteuserProps = {
-  id: string;
+  user: User;
   open: boolean;
   handleClose: () => void;
-  setSnackbarState: Dispatch<{
-    open: boolean;
-    severity: "success" | "error" | "warning" | "info" | undefined;
-    message: string;
-  }>;
 };
 
-export const DeleteUser = ({
-  id,
-  open,
-  handleClose,
-  setSnackbarState,
-}: DeleteuserProps) => {
+export const DeleteUser = ({ user, open, handleClose }: DeleteuserProps) => {
   const deleteUserMutation = useDeleteUser();
   const theme = useTheme();
   // @ts-ignore
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const setSnackbarState = useSetAtom(snackbarAtom);
 
   const handleDelete = async () => {
     await deleteUserMutation
-      .mutateAsync({ id })
+      .mutateAsync({ id: user.id })
       .catch((err) => {
         setSnackbarState({
           open: true,
@@ -68,7 +61,8 @@ export const DeleteUser = ({
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Kullanıcı hesabını silmek üzeresiniz. Emin misiniz?
+          {user.firstName + " " + user.lastName} kullanıcısını silmek
+          üzeresiniz. Emin misiniz?
         </DialogContentText>
       </DialogContent>
       <DialogActions>

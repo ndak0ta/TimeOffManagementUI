@@ -106,7 +106,7 @@ export default function UpdateTimeOff({
             // @ts-ignore
             defaultValue={dayjs(timeOff.endDate)}
             // @ts-ignore
-            minDate={updatedTimeOff.endDate}
+            minDate={dayjs(updatedTimeOff.endDate)}
             sx={{ width: "100%" }}
           />
         </DialogContent>

@@ -1,4 +1,4 @@
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { ROLES } from "@lib/authorization";
 import {
   Button,
@@ -12,26 +12,23 @@ import {
   Select,
 } from "@mui/material";
 import { useAddUserToRole } from "../api/addUserToRole";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
 
 type AddUserToRoleProps = {
   open: boolean;
   handleClose: () => void;
-  setSnackbarState: Dispatch<{
-    open: boolean;
-    severity: "success" | "error" | "warning" | "info" | undefined;
-    message: string;
-  }>;
   userId: string;
 };
 
 export default function AddUserToRole({
   open,
   handleClose,
-  setSnackbarState,
   userId,
 }: AddUserToRoleProps) {
   const [role, setRole] = useState("");
   const addUserToRole = useAddUserToRole();
+  const setSnackbarState = useSetAtom(snackbarAtom);
 
   const handleAddUserToRole = async () => {
     await addUserToRole

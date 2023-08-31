@@ -7,8 +7,9 @@ export type DeleteUserDTO = {
     id: string;
 };
 
-export const deleteUser = async ({ id }: DeleteUserDTO) => {
-    return axios.delete(`/user/${id}`);
+export const deleteUser = async ({ id }: DeleteUserDTO): Promise<boolean> => {
+    const response = await axios.delete(`/user/${id}`);
+    return response.data;
 }
 
 type UseDeleteUserOptions = {

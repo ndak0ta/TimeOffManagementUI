@@ -35,7 +35,7 @@ export default function UserCard({ user }: UserCardProps) {
             >
               İzin talebi oluştur
             </Button>
-            <CreateTimeOff open={open} handleClose={() => setOpen(false)} />
+            <CreateTimeOff open={open} setOpen={setOpen} />
           </div>
         </Fragment>
       )}

@@ -4,12 +4,11 @@ import { useMutation } from "@tanstack/react-query";
 import { TimeOff } from "../types";
 
 type DeleteTimeOffDTO = {
-    id: number;
+    timeOffId: number;
 }
 
-export const deleteTimeOff = async ({id}: DeleteTimeOffDTO) => {
-    const response = await axios.delete(`/timeOff/${id}`);
-    return response.data;
+export const deleteTimeOff = async ({ timeOffId }: DeleteTimeOffDTO): Promise<boolean> => {
+    return axios.delete(`/timeOff/${timeOffId}`);
 }
 
 type UseDeleteTimeOffOptions = {
@@ -18,12 +17,15 @@ type UseDeleteTimeOffOptions = {
 
 export const useDeleteTimeOff = ({ config }: UseDeleteTimeOffOptions = {}) => {
     return useMutation({
-        onMutate: async (timeOffId: number) => {
+        onMutate: async ({ timeOffId }: DeleteTimeOffDTO) => {
             await queryClient.cancelQueries(['timeOffs']);
-            const previousTimeOffs = queryClient.getQueryData<TimeOff[]>(['timeOffs']);
-            queryClient.setQueryData(['timeOffs'], (previousTimeOffs || []).filter(timeOff => timeOff.id !== timeOffId));
 
-            return { previousTimeOffs, timeOffId };
+            const previousTimeOffs = queryClient.getQueryData<TimeOff[]>(['timeOffs']);
+            
+            queryClient.setQueryData<TimeOff[]>(['timeOffs'], (previousTimeOffs || [])
+            .filter(timeOff => timeOff.id !== timeOffId));
+
+            return { previousTimeOffs };
         },
         onError: (error: any, variables: any, context: any) => {
             if (context?.previousTimeOffs) {

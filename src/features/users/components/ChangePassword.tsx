@@ -8,24 +8,20 @@ import {
   TextField,
 } from "@mui/material";
 import { useChangePassword } from "../api/changePassword";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
 
 type ChangePasswordProps = {
   id: string;
   open: boolean;
   handleClose: () => void;
-  setSnackbarState: Dispatch<{
-    open: boolean;
-    severity: "success" | "error" | "warning" | "info" | undefined;
-    message: string;
-  }>;
 };
 
 export default function ChangePassword({
   id,
   open,
   handleClose,
-  setSnackbarState,
 }: ChangePasswordProps) {
   const changePassword = useChangePassword();
   const [values, setValues] = useState({
@@ -33,6 +29,7 @@ export default function ChangePassword({
     newPassword: "",
   });
   const [passwordsMatch, setPasswordsMatch] = useState(false);
+  const setSnackbarState = useSetAtom(snackbarAtom);
 
   const handleChangePassword = async () => {
     if (passwordsMatch) {

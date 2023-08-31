@@ -76,7 +76,6 @@ export default function UserTimeOffListItem({
           break;
       }
     }
-    console.log(timeOff.status);
   }, [timeOff, openDeleteDialog, openUpdateDialog]);
 
   return (

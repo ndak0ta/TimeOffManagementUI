@@ -8,9 +8,11 @@ const axios = Axios.create({
 
 axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = storage.getToken();
+  
   if (!config.headers) {
       return config;
   }
+
   if (token) {
     config.headers.authorization = `Bearer ${token}`;
   }
@@ -18,5 +20,18 @@ axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers.Accept = 'application/json';
   return config;
 });
+
+/* axios.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      storage.clearToken();
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+); */
 
 export default axios;

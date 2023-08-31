@@ -8,29 +8,21 @@ import {
   TextField,
 } from "@mui/material";
 import { useUpdateUser } from "../api/updateUser";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { User } from "../types";
 import { PhoneMask } from "@components/PhoneMask";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
 
 type UpdateUserProps = {
   open: boolean;
   user: User;
   handleClose: () => void;
-  setSnackbarState: Dispatch<{
-    open: boolean;
-    severity: "success" | "error" | "warning" | "info" | undefined;
-    message: string;
-  }>;
 };
 
-export const UpdateUser = ({
-  open,
-  user,
-  handleClose,
-  setSnackbarState,
-}: UpdateUserProps) => {
+export const UpdateUser = ({ open, user, handleClose }: UpdateUserProps) => {
   const updateUser = useUpdateUser();
   const [values, setValues] = useState({
     id: user.id,
@@ -43,6 +35,7 @@ export const UpdateUser = ({
     dateOfBirth: user.dateOfBirth,
     hireDate: user.hireDate,
   });
+  const setSnackbarState = useSetAtom(snackbarAtom);
 
   const handleUpdate = async () => {
     await updateUser

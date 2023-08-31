@@ -1,4 +1,4 @@
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { useUpdateUserContact } from "../api/updateContact";
 import {
   Button,
@@ -11,30 +11,23 @@ import {
 } from "@mui/material";
 import { AuthUser } from "@features/auth";
 import { PhoneMask } from "@components/PhoneMask";
+import { useSetAtom } from "jotai";
+import { snackbarAtom } from "@stores/snackbar";
 
 type UpdateProfileProps = {
   open: boolean;
   user: AuthUser;
   handleClose: () => void;
-  setSnackbarState: Dispatch<{
-    open: boolean;
-    severity: "success" | "error" | "warning" | "info" | undefined;
-    message: string;
-  }>;
 };
 
-export function UpdateContact({
-  open,
-  user,
-  handleClose,
-  setSnackbarState,
-}: UpdateProfileProps) {
+export function UpdateContact({ open, user, handleClose }: UpdateProfileProps) {
   const [values, setValues] = useState({
     id: user.id,
     email: user.email,
     phoneNumber: user.phoneNumber,
   });
   const updateUserMutation = useUpdateUserContact();
+  const setSnackbarState = useSetAtom(snackbarAtom);
 
   const handleUpdate = async () => {
     await updateUserMutation
