@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Button, Menu, MenuItem, TableCell, TableRow } from "@mui/material";
 import { User } from "../types";
 import { formatDate } from "@utils/format";
@@ -6,19 +6,17 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { UpdateUser } from "./UpdateUser";
 import { DeleteUser } from "./DeleteUser";
 import AddUserToRole from "./AddUserToRole";
+import PopupState, { bindMenu, bindTrigger } from "material-ui-popup-state";
 
 type UserListElementProps = {
-  key: number;
   user: User;
 };
 
-export const UserListItem = ({ key, user }: UserListElementProps) => {
+export const UserListItem = ({ user }: UserListElementProps) => {
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [openAddUserToRoleDialog, setOpenAddUserToRoleDialog] =
     useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const openMenu = Boolean(anchorEl);
 
   return (
     <TableRow key={user.id}>
@@ -33,51 +31,42 @@ export const UserListItem = ({ key, user }: UserListElementProps) => {
       <TableCell>{user.remainingAnnualTimeOffs}</TableCell>
       <TableCell>{user.roles}</TableCell>
       <TableCell>
-        <Button
-          id="basic-button"
-          color="primary"
-          aria-controls={openMenu ? "user-menu-" + key : undefined}
-          aria-haspopup="true"
-          aria-expanded={openMenu ? "true" : undefined}
-          onClick={(e) => setAnchorEl(e.currentTarget)}
-        >
-          <MoreHorizIcon />
-        </Button>
-        <Menu
-          id={"user-menu-" + key}
-          anchorEl={anchorEl}
-          open={openMenu}
-          onClose={() => setAnchorEl(null)}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
-          }}
-        >
-          <MenuItem
-            onClick={() => {
-              setOpenUpdateDialog(true);
-              setAnchorEl(null);
-            }}
-          >
-            Düzenle
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setOpenAddUserToRoleDialog(true);
-              setAnchorEl(null);
-            }}
-          >
-            Rol değiştir
-          </MenuItem>
-          <MenuItem
-            sx={{ color: "error.main" }}
-            onClick={() => {
-              setOpenDeleteDialog(true);
-              setAnchorEl(null);
-            }}
-          >
-            Sil
-          </MenuItem>
-        </Menu>
+        <PopupState variant="popover" popupId={"user-popup-menu-" + user.id}>
+          {(popupState) => (
+            <Fragment>
+              <Button {...bindTrigger(popupState)}>
+                <MoreHorizIcon />
+              </Button>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem
+                  onClick={() => {
+                    setOpenUpdateDialog(true);
+                    popupState.close();
+                  }}
+                >
+                  Düzenle
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setOpenAddUserToRoleDialog(true);
+                    popupState.close();
+                  }}
+                >
+                  Rol değiştir
+                </MenuItem>
+                <MenuItem
+                  sx={{ color: "error.main" }}
+                  onClick={() => {
+                    setOpenDeleteDialog(true);
+                    popupState.close();
+                  }}
+                >
+                  Sil
+                </MenuItem>
+              </Menu>
+            </Fragment>
+          )}
+        </PopupState>
         <UpdateUser
           user={user}
           open={openUpdateDialog}

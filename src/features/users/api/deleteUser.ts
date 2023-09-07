@@ -9,6 +9,7 @@ export type DeleteUserDTO = {
 
 export const deleteUser = async ({ id }: DeleteUserDTO): Promise<boolean> => {
     const response = await axios.delete(`/user/${id}`);
+    console.log(response);
     return response.data;
 }
 
@@ -28,8 +29,9 @@ export const useDeleteUser = ({ config }: UseDeleteUserOptions = {}) => {
             return { previeusUsers };
         },
         onError: (err, variables, context: any) => {
-            if (context?.previeusUsers)
+            if (context?.previeusUsers) {
                 queryClient.setQueryData<User[]>(["users"], context?.previeusUsers);
+            }
         },
         ...config,
         mutationFn: deleteUser,

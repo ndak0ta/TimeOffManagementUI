@@ -27,6 +27,7 @@ export const DeleteUser = ({ user, open, handleClose }: DeleteuserProps) => {
   const setSnackbarState = useSetAtom(snackbarAtom);
 
   const handleDelete = async () => {
+    handleClose();
     await deleteUserMutation
       .mutateAsync({ id: user.id })
       .catch((err) => {
@@ -37,14 +38,12 @@ export const DeleteUser = ({ user, open, handleClose }: DeleteuserProps) => {
         });
       })
       .finally(() => {
-        if (deleteUserMutation.isSuccess) {
+        if (deleteUserMutation.isSuccess) { // FIXME başarılı işlemde false dönüyor
           setSnackbarState({
             open: true,
             severity: "success",
             message: "Kullanıcı başarıyla silindi",
           });
-
-          handleClose();
         }
       });
   };

@@ -6,6 +6,7 @@ import { Grid, Paper } from "@mui/material";
 import UserCard from "../components/UserCard";
 import DashboardLayout from "@components/DashboardLayout";
 import LoadingSpinner from "@components/LoadingSpinner";
+import Calendar from "../components/Calendar";
 
 // TODO bu componenti revize et timeoffs'un içine taşınabilir
 export function MainPage() {
@@ -38,7 +39,9 @@ export function MainPage() {
               flexDirection: "column",
               height: 240,
             }}
-          ></Paper>
+          >
+            <Calendar />
+          </Paper>
         </Grid>
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>

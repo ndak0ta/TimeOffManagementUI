@@ -7,6 +7,8 @@ export type LoginCredentialDTO = {
 };
 
 export const loginWithUsernameAndPassword = async (credential: LoginCredentialDTO): Promise<UserResponse> => {
-    const response = await axios.post("/auth/login", credential);
+    const response = await axios.post("/auth/login", credential, {
+        withCredentials: true,
+    });
     return response.data
 }
